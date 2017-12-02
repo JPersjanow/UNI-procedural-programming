@@ -38,9 +38,10 @@ int main()
 	bool done = false;
 	bool redraw = false;
 	
-	//collision detection
+	//collision_enemy detection
 	bool bound = false;
-	bool collision = false;
+	bool collision_enemy = false;
+	bool collision_item = false;
 	
 	//game variables
 	Student player;
@@ -84,11 +85,12 @@ int main()
 	ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
 	ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
 
-	ALLEGRO_BITMAP *menu_background = al_load_bitmap("menu_background.jpg");
+	ALLEGRO_BITMAP *menu_background = al_load_bitmap("background.png");
 	
 	
 	ALLEGRO_FONT *font8bit = al_load_ttf_font("8-BIT WONDER.ttf", 25, 0);
 	ALLEGRO_FONT *title_font = al_load_ttf_font("8-BIT WONDER.ttf", 20, 0);
+	ALLEGRO_FONT *talk_font = al_load_font("8-BIT WONDER.ttf", 10, 0);
 
 	//checking allegro variables
 	if (!display)
@@ -154,6 +156,10 @@ int main()
 		case ALLEGRO_KEY_N:
 			keys[N] = true;
 			break;
+		case ALLEGRO_KEY_S:
+			keys[S] = true;
+			break;
+
 
 		}
 	}
@@ -183,6 +189,12 @@ int main()
 		case ALLEGRO_KEY_SPACE:
 			keys[SPACE] = false;
 			break;
+		case ALLEGRO_KEY_N:
+			keys[N] = false;
+			break;
+		case ALLEGRO_KEY_S:
+			keys[S] = false;
+			break;
 		}
 
 	}
@@ -200,7 +212,7 @@ int main()
 			if (keys[LEFT])
 				MovePlayerLeft(player);
 			
-			//collision detection
+			//collision_enemy detection
 			if (keys[E])
 				bound = true;
 			else
@@ -211,24 +223,37 @@ int main()
 				player.y + player.boundy > enemy.y - enemy.boundy &&
 				player.y - player.boundy < enemy.y - enemy.boundy)
 			{
-				collision = true;
+				collision_enemy = true;
 			}
-			else if (player.x + player.boundx > item.x - item.boundx &&
+			else
+				collision_enemy = false;
+			
+			if (player.x + player.boundx > item.x - item.boundx &&
 				player.x - player.boundx < item.x - item.boundx &&
 				player.y + player.boundy > item.y - item.boundy &&
 				player.y - player.boundy < item.y - item.boundy)
 			{
-				collision = true;
+				collision_item = true;
 			}
 			else
-				collision = false;
-			
-			//choosing states
+			{
+				collision_item = false;
+			}
+
+			//states
 			if (state == MENU)
 			{
-				if (keys[SPACE])
+				if (keys[N])
 				{
 					state = PLAYING;
+				}
+				else if (keys[S])
+				{
+					state = SETTINGS;
+				}
+				else if (keys[ESC])
+				{
+					done = true;
 				}
 			}
 			else if (state == PLAYING)
@@ -237,6 +262,11 @@ int main()
 				{
 					state = SETTINGS;
 				}
+				else if (keys[E] && collision_enemy)
+				{
+					printf("interaction");
+					al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy.x, enemy.y -25, ALLEGRO_ALIGN_CENTER, "hello");
+				}
 			
 			}
 			else if (state == SETTINGS)
@@ -244,6 +274,7 @@ int main()
 				if (keys[SPACE])
 					done = true;
 			}
+			//komentarz
 
 		}
 		
@@ -273,8 +304,9 @@ int main()
 				DrawEnemy(enemy);
 				DrawItem(item);
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h -30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
+				al_draw_text(talk_font, al_map_rgb(255, 255, 255), screen_w-50, 35, ALLEGRO_ALIGN_CENTER, "score");
 
-				//collision detection - developer
+				//collision_enemy detection - developer
 				if (bound)
 				{
 					al_draw_filled_rectangle(player.x - player.boundx, player.y - player.boundy, player.x + player.boundx, player.y + player.boundy, al_map_rgba_f(.6, 0, .6, .6));
@@ -283,7 +315,7 @@ int main()
 
 				}
 
-				if (collision)
+				if (collision_enemy || collision_item)
 				{
 					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, 30, ALLEGRO_ALIGN_CENTRE, "collision detected");
 				}
@@ -299,10 +331,11 @@ int main()
 				al_draw_bitmap(menu_background, 0, 0, 0);
 				al_draw_text(title_font, al_map_rgb(255, 255, 255), screen_w / 2, 50, ALLEGRO_ALIGN_CENTER, "LIFE IS HARD <> STUDENT EDITION");
 				al_draw_line(0, 80, screen_w, 80, al_map_rgb(255, 255, 255), 10);
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2-30, ALLEGRO_ALIGN_CENTER, "choose game state");
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "N - New Game");
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 30, ALLEGRO_ALIGN_CENTER, "S - Settings");
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 60, ALLEGRO_ALIGN_CENTER, "E - Exit");
+				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2-30, ALLEGRO_ALIGN_CENTER, "click");
+				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "N for New Game");
+				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 30, ALLEGRO_ALIGN_CENTER, "S for Settings");
+				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 60, ALLEGRO_ALIGN_CENTER, "ESC for Exit");
+		
 				
 			}
 
