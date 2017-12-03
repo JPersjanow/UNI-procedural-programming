@@ -17,10 +17,11 @@ const int FPS = 60;
 enum KEYS{UP,DOWN,LEFT,RIGHT,E,ESC,SPACE,N,S};
 bool keys[9] = { false,false,false,false,false,false,false,false,false};
 
+//states
 enum STATE{MENU,PLAYING,SETTINGS};
 
 
-
+//object functions
 void InitPlayer(Student &player);
 void DrawPlayer(Student &player);
 void MovePlayerUp(Student &player);
@@ -345,6 +346,7 @@ int main()
 			else if (state == SETTINGS)
 			{
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "press space to exit");
+				al_draw_text(font8bit,al_map_rgb(255,255,255),screen_w/2,screen_h/2-35,ALLEGRO_ALIGN_CENTER,"")
 			}
 			
 			
@@ -381,11 +383,7 @@ void InitPlayer(Student &player)
 }
 void DrawPlayer(Student &player)
 {
-	/*al_draw_line(player.x, player.y, player.x, player.y + 50, al_map_rgb(255, 255, 0), 5);
-	al_draw_line(player.x, player.y+10, player.x-25, player.y + 25, al_map_rgb(255, 255, 0), 5);
-	al_draw_line(player.x, player.y+10, player.x+25, player.y + 25, al_map_rgb(255, 255, 0), 5);
-	al_draw_line(player.x, player.y+50, player.x+25, player.y + 75, al_map_rgb(255, 255, 0), 5);
-	al_draw_line(player.x, player.y+50, player.x-25, player.y + 75, al_map_rgb(255, 255, 0), 5);*/
+	
 	ALLEGRO_BITMAP *bitmap = al_load_bitmap("player_bitmap_1.png");
 	int image_w = al_get_bitmap_width(bitmap);
 	int image_h = al_get_bitmap_height(bitmap);
