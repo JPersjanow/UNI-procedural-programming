@@ -17,8 +17,13 @@ const int FPS = 60;
 enum KEYS{UP,DOWN,LEFT,RIGHT,E,ESC,SPACE,N,S};
 bool keys[9] = { false,false,false,false,false,false,false,false,false};
 
+int pos_x = screen_w/2;
+int pos_y = screen_h/2;
+
 //states
 enum STATE{MENU,PLAYING,SETTINGS};
+
+
 
 
 //object functions
@@ -35,7 +40,7 @@ void DrawItem(Bottle &item);
 
 int main()
 {
-
+	//main variables
 	bool done = false;
 	bool redraw = false;
 	
@@ -51,6 +56,8 @@ int main()
 	
 	//state variable
 	int state = MENU;
+
+
 
 	//***************Allegro initialisation*************//
 	//**************************************************//
@@ -72,6 +79,7 @@ int main()
 
 	//keyboard and/or mouse
 	al_install_keyboard();
+	al_install_mouse();
 
 	//objects
 	InitPlayer(player);
@@ -118,6 +126,7 @@ int main()
 
 	//registering event source
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
+	al_register_event_source(event_queue, al_get_mouse_event_source());
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 
@@ -244,6 +253,8 @@ int main()
 			//states
 			if (state == MENU)
 			{
+				
+				
 				if (keys[N])
 				{
 					state = PLAYING;
@@ -256,6 +267,8 @@ int main()
 				{
 					done = true;
 				}
+
+
 			}
 			else if (state == PLAYING)
 			{
@@ -272,10 +285,19 @@ int main()
 			}
 			else if (state == SETTINGS)
 			{
-				if (keys[SPACE])
+				if (keys[N])
+				{
+					state = PLAYING;
+				}
+				else if (keys[E])
+				{
 					done = true;
+				}
+				else if (keys[S])
+				{
+					state = MENU;
+				}
 			}
-			//komentarz
 
 		}
 		
@@ -284,7 +306,46 @@ int main()
 			done = true;
 		}
 		
-	
+		
+
+		//Mouse operations in menu and settings
+		else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+		{
+			if (state == MENU)
+			{
+				if (pos_x>289 && pos_x <501 && pos_y > 424 && pos_y < 441)
+				{
+					if (ev.mouse.button & 1)
+						state = PLAYING;
+				}
+				if (pos_x>302 && pos_x <489 && pos_y > 454 && pos_y < 474)
+				{
+					if (ev.mouse.button & 1)
+						state = SETTINGS;
+				}
+				if (pos_x>354 && pos_x <436 && pos_y > 485 && pos_y < 505)
+				{
+					if (ev.mouse.button & 1)
+						done = true;
+				}
+
+			}
+			else if (state == SETTINGS)
+			{
+				if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
+				{
+					if (ev.mouse.button & 1)
+						done = true;
+				}
+			}
+		
+		}
+		else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
+		{
+			printf("%i , %i\n", pos_x, pos_y);
+			pos_x = ev.mouse.x;
+			pos_y = ev.mouse.y;
+		}
 		
 		
 
@@ -329,13 +390,38 @@ int main()
 
 			else if (state == MENU)
 			{
+
 				al_draw_bitmap(menu_background, 0, 0, 0);
-				al_draw_text(title_font, al_map_rgb(255, 255, 255), screen_w / 2, 50, ALLEGRO_ALIGN_CENTER, "LIFE IS HARD <> STUDENT EDITION");
-				al_draw_line(0, 80, screen_w, 80, al_map_rgb(255, 255, 255), 10);
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2-30, ALLEGRO_ALIGN_CENTER, "click");
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "N for New Game");
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 30, ALLEGRO_ALIGN_CENTER, "S for Settings");
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 60, ALLEGRO_ALIGN_CENTER, "ESC for Exit");
+				
+				//colour change of menu buttons beta version
+				/*if (pos_x > 289 && pos_x < 501 && pos_y > 424 && pos_y < 441)
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 120, ALLEGRO_ALIGN_CENTER, "New Game");
+				}
+				else
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 120, ALLEGRO_ALIGN_CENTER, "New Game");
+				}*/
+				al_draw_text(font8bit, al_map_rgb(r, 0, 0), screen_w / 2, screen_h / 2 + 120, ALLEGRO_ALIGN_CENTER, "New Game");
+
+				if (pos_x > 302 && pos_x < 489 && pos_y > 454 && pos_y < 474)
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "Settings");
+				}
+				else
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "Settings");
+				}
+	
+				if (pos_x > 354 && pos_x < 436 && pos_y > 485 && pos_y < 505)
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 180, ALLEGRO_ALIGN_CENTER, "Exit");
+				}
+				else 
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 180, ALLEGRO_ALIGN_CENTER, "Exit");
+				}
+			
 		
 				
 			}
@@ -345,8 +431,14 @@ int main()
 
 			else if (state == SETTINGS)
 			{
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "press space to exit");
-				al_draw_text(font8bit,al_map_rgb(255,255,255),screen_w/2,screen_h/2-35,ALLEGRO_ALIGN_CENTER,"")
+				if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "EXIT");
+				}
+				else
+				{
+					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "EXIT");
+				}
 			}
 			
 			
