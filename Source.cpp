@@ -14,8 +14,8 @@ const int FPS = 60;
 
 
 //keyboard and keys
-enum KEYS{UP,DOWN,LEFT,RIGHT,E,ESC,SPACE,N,S};
-bool keys[9] = { false,false,false,false,false,false,false,false,false};
+enum KEYS{UP,DOWN,LEFT,RIGHT,E,ESC,SPACE};
+bool keys[7] = { false,false,false,false,false,false,false};
 
 int pos_x = screen_w/2;
 int pos_y = screen_h/2;
@@ -57,7 +57,7 @@ int main()
 	//state variable
 	int state = MENU;
 
-
+	int score = 0;
 
 	//***************Allegro initialisation*************//
 	//**************************************************//
@@ -163,12 +163,6 @@ int main()
 		case ALLEGRO_KEY_SPACE:
 			keys[SPACE] = true;
 			break;
-		case ALLEGRO_KEY_N:
-			keys[N] = true;
-			break;
-		case ALLEGRO_KEY_S:
-			keys[S] = true;
-			break;
 
 
 		}
@@ -198,12 +192,6 @@ int main()
 			break;
 		case ALLEGRO_KEY_SPACE:
 			keys[SPACE] = false;
-			break;
-		case ALLEGRO_KEY_N:
-			keys[N] = false;
-			break;
-		case ALLEGRO_KEY_S:
-			keys[S] = false;
 			break;
 		}
 
@@ -250,27 +238,9 @@ int main()
 				collision_item = false;
 			}
 
-			//states
-			if (state == MENU)
-			{
-				
-				
-				if (keys[N])
-				{
-					state = PLAYING;
-				}
-				else if (keys[S])
-				{
-					state = SETTINGS;
-				}
-				else if (keys[ESC])
-				{
-					done = true;
-				}
 
-
-			}
-			else if (state == PLAYING)
+			//game functions during playing
+			if (state == PLAYING)
 			{
 				if (keys[ESC])
 				{
@@ -278,25 +248,12 @@ int main()
 				}
 				else if (keys[E] && collision_enemy)
 				{
-					printf("interaction");
+	
+					score++; 
 					al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy.x, enemy.y -25, ALLEGRO_ALIGN_CENTER, "hello");
+					printf("interation score: %i\n", score);
 				}
 			
-			}
-			else if (state == SETTINGS)
-			{
-				if (keys[N])
-				{
-					state = PLAYING;
-				}
-				else if (keys[E])
-				{
-					done = true;
-				}
-				else if (keys[S])
-				{
-					state = MENU;
-				}
 			}
 
 		}
@@ -340,6 +297,8 @@ int main()
 			}
 		
 		}
+		
+		//mouse position develloper settings
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
 			printf("%i , %i\n", pos_x, pos_y);
@@ -366,7 +325,8 @@ int main()
 				DrawEnemy(enemy);
 				DrawItem(item);
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h -30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
-				al_draw_text(talk_font, al_map_rgb(255, 255, 255), screen_w-50, 35, ALLEGRO_ALIGN_CENTER, "score");
+				al_draw_text(talk_font, al_map_rgb(255, 255, 255), screen_w-50, 35, ALLEGRO_ALIGN_CENTER, "score:");
+				
 
 				//collision_enemy detection - developer
 				if (bound)
@@ -394,15 +354,15 @@ int main()
 				al_draw_bitmap(menu_background, 0, 0, 0);
 				
 				//colour change of menu buttons beta version
-				/*if (pos_x > 289 && pos_x < 501 && pos_y > 424 && pos_y < 441)
+				if (pos_x > 289 && pos_x < 501 && pos_y > 424 && pos_y < 441)
 				{
 					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 120, ALLEGRO_ALIGN_CENTER, "New Game");
 				}
 				else
 				{
 					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 120, ALLEGRO_ALIGN_CENTER, "New Game");
-				}*/
-				al_draw_text(font8bit, al_map_rgb(r, 0, 0), screen_w / 2, screen_h / 2 + 120, ALLEGRO_ALIGN_CENTER, "New Game");
+				}
+	
 
 				if (pos_x > 302 && pos_x < 489 && pos_y > 454 && pos_y < 474)
 				{
