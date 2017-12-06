@@ -22,6 +22,7 @@ struct Sebix
 	int x;
 	int y;
 	int speed;
+	int live;
 
 	int width;
 	int height;

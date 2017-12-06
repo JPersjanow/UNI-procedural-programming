@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_primitives.h>
 #include <allegro5\allegro_font.h>
@@ -11,6 +12,7 @@
 const int screen_h = 600;
 const int screen_w = 800;
 const int FPS = 60;
+const int ENEMY_NUMBER = 10; 
 
 
 //keyboard and keys
@@ -25,7 +27,6 @@ enum STATE{MENU,PLAYING,BOARD};
 
 
 
-
 //object functions
 void InitPlayer(Student &player);
 void DrawPlayer(Student &player);
@@ -33,8 +34,8 @@ void MovePlayerUp(Student &player);
 void MovePlayerDown(Student &player);
 void MovePlayerLeft(Student &player);
 void MovePlayerRight(Student &player);
-void InitEnemy(Sebix &enemy);
-void DrawEnemy(Sebix &enemy);
+void InitEnemy(Sebix enemy[], int size);
+void DrawEnemy(Sebix enemy[], int size);
 void InitItem(Bottle &item);
 void DrawItem(Bottle &item);
 
@@ -52,7 +53,7 @@ int main()
 
 	//game variables
 	Student player;
-	Sebix enemy;
+	Sebix enemy[ENEMY_NUMBER];
 	Bottle item;
 	
 	//state variable
@@ -84,7 +85,7 @@ int main()
 
 	//objects
 	InitPlayer(player);
-	InitEnemy(enemy);
+	InitEnemy(enemy, ENEMY_NUMBER);
 	InitItem(item);
 	
 	//*****************Allegro variables****************//
@@ -216,17 +217,22 @@ int main()
 				bound = true;
 			else
 				bound = false;
-
-			if (player.x + player.boundx > enemy.x - enemy.boundx &&
-				player.x - player.boundx < enemy.x - enemy.boundx &&
-				player.y + player.boundy > enemy.y - enemy.boundy &&
-				player.y - player.boundy < enemy.y - enemy.boundy)
+			for (int i = 1; i < ENEMY_NUMBER; i++)
 			{
-				collision_enemy = true;
+				if (player.x + player.boundx > enemy[i].x - enemy[i].boundx &&
+					player.x - player.boundx < enemy[i].x - enemy[i].boundx &&
+					player.y + player.boundy > enemy[i].y - enemy[i].boundy &&
+					player.y - player.boundy < enemy[i].y - enemy[i].boundy)
+				{
+					collision_enemy = true;
+				}
+				else
+				{
+					collision_enemy = false;
+				}
 			}
-			else
-				collision_enemy = false;
 			
+			//collision item detection
 			if (player.x + player.boundx > item.x - item.boundx &&
 				player.x - player.boundx < item.x - item.boundx &&
 				player.y + player.boundy > item.y - item.boundy &&
@@ -249,8 +255,12 @@ int main()
 				}
 				else if (keys[E] && collision_enemy)
 				{
-					player.score++;
-					al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy.x, enemy.y -25, ALLEGRO_ALIGN_CENTER, "hello");
+					player.score = player.score - 1;
+					for (int i = 1; i < ENEMY_NUMBER; i++)
+					{
+						al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy[i].x, enemy[i].y - 25, ALLEGRO_ALIGN_CENTER, "hello");
+					}
+					
 					printf("interation");
 				}
 			
@@ -323,8 +333,8 @@ int main()
 			if (state == PLAYING)
 			{
 				DrawPlayer(player);
-				DrawEnemy(enemy);
 				DrawItem(item);
+				DrawEnemy(enemy, ENEMY_NUMBER);
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h -30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), screen_w - 100, 35, ALLEGRO_ALIGN_CENTER, "score %i", player.score);
 
@@ -332,7 +342,12 @@ int main()
 				if (bound)
 				{
 					al_draw_filled_rectangle(player.x - player.boundx, player.y - player.boundy, player.x + player.boundx, player.y + player.boundy, al_map_rgba_f(.6, 0, .6, .6));
-					al_draw_filled_rectangle(enemy.x - enemy.boundx, enemy.y - enemy.boundy, enemy.x + enemy.boundx, enemy.y + enemy.boundy, al_map_rgba_f(.6, 0, .6, .6));
+					
+					for (int i = 1; i < ENEMY_NUMBER; i++)
+					{
+						al_draw_filled_rectangle(enemy[i].x - enemy[i].boundx, enemy[i].y - enemy[i].boundy, enemy[i].x + enemy[i].boundx, enemy[i].y + enemy[i].boundy, al_map_rgba_f(.6, 0, .6, .6));
+					}
+					
 					al_draw_filled_rectangle(item.x - item.boundx, item.y - item.boundy, item.x + item.boundx, item.y + item.boundy, al_map_rgba_f(.6, 0, .6, .6));
 
 				}
@@ -439,11 +454,11 @@ void InitPlayer(Student &player)
 void DrawPlayer(Student &player)
 {
 	
-	ALLEGRO_BITMAP *bitmap = al_load_bitmap("player_bitmap_1.png");
-	int image_w = al_get_bitmap_width(bitmap);
-	int image_h = al_get_bitmap_height(bitmap);
+	ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("player_bitmap_1.png");
+	int image_w = al_get_bitmap_width(player_bitmap);
+	int image_h = al_get_bitmap_height(player_bitmap);
 
-	al_draw_bitmap(bitmap, player.x-image_w/2, player.y-image_h/2, 0);
+	al_draw_bitmap(player_bitmap, player.x-image_w/2, player.y-image_h/2, 0);
 	//al_draw_filled_circle(player.x, player.y, 40, al_map_rgb(0, 255, 0));
 	
 }
@@ -485,21 +500,31 @@ void MovePlayerRight(Student &player)
 }
 
 //Enemy
-void InitEnemy(Sebix &enemy)
+void InitEnemy(Sebix enemy[], int size)
 {
-	enemy.x = screen_w / 2 - 60;
-	enemy.y = screen_h / 2 - 60;
-	enemy.ID = ENEMY;
-	enemy.speed = 7;
-	enemy.width = 10;
-	enemy.height = 10;
-	enemy.boundx = enemy.width;
-	enemy.boundy = enemy.height;
+	for (int i = 1; i < size; i++)
+	{
+		enemy[i].ID = ENEMY;
+		enemy[i].live = true;
+		enemy[i].width = 30;
+		enemy[i].height = 30;
+		enemy[i].boundx = enemy[i].width;
+		enemy[i].boundy = enemy[i].height;
+	}
 
 }
-void DrawEnemy(Sebix &enemy)
+void DrawEnemy(Sebix enemy[], int size)
 {
-	al_draw_filled_circle(enemy.x, enemy.y, 10, al_map_rgb(255, 0, 0));
+
+	enemy[1].x = screen_w / 2;
+	enemy[1].y = screen_h / 2;
+	for (int i =2 ; i < size; i++)
+	{
+		enemy[i].x = enemy[i - 1].x + 50;
+		enemy[i].y = enemy[i - 1].y - 30;
+
+		al_draw_filled_circle(enemy[i].x, enemy[i].y, 5, al_map_rgb(255, 0, 0));
+	}
 
 }
 
@@ -516,5 +541,12 @@ void InitItem(Bottle &item)
 }
 void DrawItem(Bottle &item)
 {
-	al_draw_filled_circle(item.x, item.y, 10, al_map_rgb(0, 255, 255));
+	ALLEGRO_BITMAP *bottle_bitmap = al_load_bitmap("bottle.png");
+	int image_w = al_get_bitmap_width(bottle_bitmap);
+	int image_h = al_get_bitmap_height(bottle_bitmap);
+
+	al_draw_bitmap(bottle_bitmap, item.x - image_w / 2, item.y - image_h / 2, 0);
+
+
+	//al_draw_filled_circle(item.x, item.y, 10, al_map_rgb(0, 255, 255));
 }
