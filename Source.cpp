@@ -21,7 +21,7 @@ int pos_x = screen_w/2;
 int pos_y = screen_h/2;
 
 //states
-enum STATE{MENU,PLAYING,SETTINGS};
+enum STATE{MENU,PLAYING,BOARD};
 
 
 
@@ -49,6 +49,7 @@ int main()
 	bool collision_enemy = false;
 	bool collision_item = false;
 	
+
 	//game variables
 	Student player;
 	Sebix enemy;
@@ -244,14 +245,13 @@ int main()
 			{
 				if (keys[ESC])
 				{
-					state = SETTINGS;
+					state = BOARD;
 				}
 				else if (keys[E] && collision_enemy)
 				{
-	
-					score++; 
+					player.score++;
 					al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy.x, enemy.y -25, ALLEGRO_ALIGN_CENTER, "hello");
-					printf("interation score: %i\n", score);
+					printf("interation");
 				}
 			
 			}
@@ -278,7 +278,7 @@ int main()
 				if (pos_x>302 && pos_x <489 && pos_y > 454 && pos_y < 474)
 				{
 					if (ev.mouse.button & 1)
-						state = SETTINGS;
+						state = BOARD;
 				}
 				if (pos_x>354 && pos_x <436 && pos_y > 485 && pos_y < 505)
 				{
@@ -287,14 +287,15 @@ int main()
 				}
 
 			}
-			else if (state == SETTINGS)
+			else if (state == BOARD)
 			{
 				if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
 				{
 					if (ev.mouse.button & 1)
-						done = true;
+						state = MENU;
 				}
 			}
+			
 		
 		}
 		
@@ -325,8 +326,7 @@ int main()
 				DrawEnemy(enemy);
 				DrawItem(item);
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h -30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
-				al_draw_text(talk_font, al_map_rgb(255, 255, 255), screen_w-50, 35, ALLEGRO_ALIGN_CENTER, "score:");
-				
+				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), screen_w - 100, 35, ALLEGRO_ALIGN_CENTER, "score %i", player.score);
 
 				//collision_enemy detection - developer
 				if (bound)
@@ -366,11 +366,11 @@ int main()
 
 				if (pos_x > 302 && pos_x < 489 && pos_y > 454 && pos_y < 474)
 				{
-					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "Settings");
+					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "LifeBoard");
 				}
 				else
 				{
-					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "Settings");
+					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "LifeBoard");
 				}
 	
 				if (pos_x > 354 && pos_x < 436 && pos_y > 485 && pos_y < 505)
@@ -386,18 +386,18 @@ int main()
 				
 			}
 
-			//***********************SETTINGS************************//
+			//***********************BOARD**************************//
 			//******************************************************//
 
-			else if (state == SETTINGS)
+			else if (state == BOARD)
 			{
 				if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
 				{
-					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "EXIT");
+					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "Back to Menu");
 				}
 				else
 				{
-					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "EXIT");
+					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "Back to Menu");
 				}
 			}
 			
@@ -410,8 +410,11 @@ int main()
 
 	al_destroy_display(display);
 	al_destroy_font(font8bit);
+	al_destroy_font(talk_font);
+	al_destroy_font(title_font);
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
+	
 }
 
 
