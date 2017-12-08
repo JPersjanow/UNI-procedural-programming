@@ -12,7 +12,7 @@
 const int screen_h = 600;
 const int screen_w = 800;
 const int FPS = 60;
-const int ENEMY_NUMBER = 10; 
+const int ENEMY_NUMBER = 5; 
 
 
 //keyboard and keys
@@ -203,6 +203,7 @@ int main()
 		{
 			redraw = true;
 
+			//player movement
 			if (keys[UP])
 				MovePlayerUp(player);
 			if (keys[DOWN])
@@ -212,31 +213,76 @@ int main()
 			if (keys[LEFT])
 				MovePlayerLeft(player);
 			
+			/*************************************/
+			/***************MAP******************/
+			
+			for (int j = 0; j < screen_w; j++)
+			{
+				for (int i = 0; i < screen_h; i++)
+				{
+					if (player.x < 100)
+					{
+						player.x = j;
+					}
+				}
+			}
+			
+
+
+
 			//collision_enemy detection
 			if (keys[E])
 				bound = true;
 			else
 				bound = false;
-			for (int i = 1; i < ENEMY_NUMBER; i++)
+
+			if (player.x + player.boundx > enemy[1].x - enemy[1].boundx &&
+				player.x - player.boundx < enemy[1].x + enemy[1].boundx &&
+				player.y + player.boundy > enemy[1].y - enemy[1].boundy &&
+				player.y - player.boundy < enemy[1].y + enemy[1].boundy)
 			{
-				if (player.x + player.boundx > enemy[i].x - enemy[i].boundx &&
-					player.x - player.boundx < enemy[i].x - enemy[i].boundx &&
-					player.y + player.boundy > enemy[i].y - enemy[i].boundy &&
-					player.y - player.boundy < enemy[i].y - enemy[i].boundy)
-				{
-					collision_enemy = true;
-				}
-				else
-				{
-					collision_enemy = false;
-				}
+				collision_enemy = true;
+				//develloper
+				printf("colission enemy 1\n");
 			}
+			else if (player.x + player.boundx > enemy[2].x - enemy[2].boundx &&
+				player.x - player.boundx < enemy[2].x + enemy[2].boundx &&
+				player.y + player.boundy > enemy[2].y - enemy[2].boundy &&
+				player.y - player.boundy < enemy[2].y + enemy[2].boundy)
+			{
+				collision_enemy = true;
+				//develloper
+				printf("colission enemy 2\n");
+			}
+			else if (player.x + player.boundx > enemy[3].x - enemy[3].boundx &&
+				player.x - player.boundx < enemy[3].x + enemy[3].boundx &&
+				player.y + player.boundy > enemy[3].y - enemy[3].boundy &&
+				player.y - player.boundy < enemy[3].y + enemy[3].boundy)
+			{
+				collision_enemy = true;
+				//develloper
+				printf("colission enemy 3\n");
+			}
+			else if (player.x + player.boundx > enemy[4].x - enemy[4].boundx &&
+				player.x - player.boundx < enemy[4].x + enemy[4].boundx &&
+				player.y + player.boundy > enemy[4].y - enemy[4].boundy &&
+				player.y - player.boundy < enemy[4].y + enemy[4].boundy)
+			{
+				collision_enemy = true;
+				//develloper
+				printf("colission enemy 4\n");
+			}
+			else
+			{
+				collision_enemy = false;
+			}
+
 			
 			//collision item detection
 			if (player.x + player.boundx > item.x - item.boundx &&
-				player.x - player.boundx < item.x - item.boundx &&
+				player.x - player.boundx < item.x + item.boundx &&
 				player.y + player.boundy > item.y - item.boundy &&
-				player.y - player.boundy < item.y - item.boundy)
+				player.y - player.boundy < item.y + item.boundy)
 			{
 				collision_item = true;
 			}
@@ -343,7 +389,7 @@ int main()
 				{
 					al_draw_filled_rectangle(player.x - player.boundx, player.y - player.boundy, player.x + player.boundx, player.y + player.boundy, al_map_rgba_f(.6, 0, .6, .6));
 					
-					for (int i = 1; i < ENEMY_NUMBER; i++)
+					for (int i = 0; i < ENEMY_NUMBER; i++)
 					{
 						al_draw_filled_rectangle(enemy[i].x - enemy[i].boundx, enemy[i].y - enemy[i].boundy, enemy[i].x + enemy[i].boundx, enemy[i].y + enemy[i].boundy, al_map_rgba_f(.6, 0, .6, .6));
 					}
@@ -518,15 +564,24 @@ void DrawEnemy(Sebix enemy[], int size)
 
 	enemy[1].x = screen_w / 2;
 	enemy[1].y = screen_h / 2;
-	for (int i =2 ; i < size; i++)
-	{
-		enemy[i].x = enemy[i - 1].x + 50;
-		enemy[i].y = enemy[i - 1].y - 30;
 
-		al_draw_filled_circle(enemy[i].x, enemy[i].y, 5, al_map_rgb(255, 0, 0));
-	}
+	enemy[2].x = screen_w / 2 +70;
+	enemy[2].y = screen_h / 2;
+
+	enemy[3].x = screen_w / 2 -70;
+	enemy[3].y = screen_h / 2;
+
+	enemy[4].x = screen_w / 2;
+	enemy[4].y = screen_h / 2 +70;
+
+
+	al_draw_circle(enemy[1].x, enemy[1].y, 6, al_map_rgb(255, 0, 0), 10);
+	al_draw_circle(enemy[2].x, enemy[2].y, 6, al_map_rgb(255, 0, 0), 10);
+	al_draw_circle(enemy[3].x, enemy[3].y, 6, al_map_rgb(255, 0, 0), 10);
+	al_draw_circle(enemy[4].x, enemy[4].y, 6, al_map_rgb(255, 0, 0), 10);
 
 }
+
 
 //Item
 void InitItem(Bottle &item)
