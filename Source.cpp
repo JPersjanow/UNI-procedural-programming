@@ -97,6 +97,9 @@ int main()
 	ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
 
 	ALLEGRO_BITMAP *menu_background = al_load_bitmap("background.png");
+	ALLEGRO_BITMAP *map = al_load_bitmap("map.png");
+	int map_w = al_get_bitmap_width(map);
+	int map_h = al_get_bitmap_height(map);
 	
 	
 	ALLEGRO_FONT *font8bit = al_load_ttf_font("8-BIT WONDER.ttf", 25, 0);
@@ -212,6 +215,12 @@ int main()
 				MovePlayerRight(player);
 			if (keys[LEFT])
 				MovePlayerLeft(player);
+			//developer
+			if (state == PLAYING)
+			{
+				printf("player x = %i\n player.y = %i\n", player.x, player.y);
+			}
+		
 			
 			/*************************************/
 			/***************MAP******************/
@@ -358,7 +367,11 @@ int main()
 		//mouse position develloper settings
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
-			printf("%i , %i\n", pos_x, pos_y);
+			if (state == MENU)
+			{
+				printf("%i , %i\n", pos_x, pos_y);
+			}
+			
 			pos_x = ev.mouse.x;
 			pos_y = ev.mouse.y;
 		}
@@ -378,11 +391,15 @@ int main()
 			//***********************************************************//
 			if (state == PLAYING)
 			{
+
+				al_draw_bitmap(map, screen_w - map_w, screen_h - map_h, 0);
+
 				DrawPlayer(player);
 				DrawItem(item);
-				DrawEnemy(enemy, ENEMY_NUMBER);
+				//DrawEnemy(enemy, ENEMY_NUMBER);
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h -30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), screen_w - 100, 35, ALLEGRO_ALIGN_CENTER, "score %i", player.score);
+				
 
 				//collision_enemy detection - developer
 				if (bound)
@@ -490,7 +507,7 @@ void InitPlayer(Student &player)
 	player.y = screen_h / 2;
 	player.ID = PLAYER;
 	player.score = 0;
-	player.speed = 7;
+	player.speed = 3;
 	player.width = 50;
 	player.height = 75;
 	player.boundx = player.width/2;
