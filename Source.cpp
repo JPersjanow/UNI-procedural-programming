@@ -14,6 +14,11 @@ const int screen_w = 800;
 const int FPS = 60;
 const int ENEMY_NUMBER = 5; 
 
+//player choice variables
+bool Jakub = false;
+bool Bojan = false;
+bool Mati = false;
+bool Bocian = false;
 
 //keyboard and keys
 enum KEYS{UP,DOWN,LEFT,RIGHT,E,ESC,SPACE};
@@ -23,7 +28,7 @@ int pos_x = screen_w/2;
 int pos_y = screen_h/2;
 
 //states
-enum STATE{MENU,PLAYING,BOARD};
+enum STATE{MENU,PLAYING,BOARD,PLAYER_SELECTION};
 
 
 
@@ -49,7 +54,6 @@ int main()
 	bool bound = false;
 	bool collision_enemy = false;
 	bool collision_item = false;
-	
 
 	//game variables
 	Student player;
@@ -100,6 +104,8 @@ int main()
 	ALLEGRO_BITMAP *map = al_load_bitmap("map.png");
 	int map_w = al_get_bitmap_width(map);
 	int map_h = al_get_bitmap_height(map);
+	ALLEGRO_BITMAP *player_Bocian = al_load_bitmap("Bocian.png");
+	ALLEGRO_BITMAP *player_Dolny = al_load_bitmap("Dolny.png");
 	
 	
 	ALLEGRO_FONT *font8bit = al_load_ttf_font("8-BIT WONDER.ttf", 25, 0);
@@ -338,7 +344,7 @@ int main()
 				if (pos_x>289 && pos_x <501 && pos_y > 424 && pos_y < 441)
 				{
 					if (ev.mouse.button & 1)
-						state = PLAYING;
+						state = PLAYER_SELECTION;
 				}
 				if (pos_x>302 && pos_x <489 && pos_y > 454 && pos_y < 474)
 				{
@@ -352,6 +358,24 @@ int main()
 				}
 
 			}
+			else if (state == PLAYER_SELECTION)
+			{
+				if (keys[E])
+				{
+					state = PLAYING;
+				}
+				else if (pos_x > 75 && pos_x < 125 && pos_y>300 && pos_y < 375)
+				{
+					Bocian = true;
+					state = PLAYING;
+				}
+				else if (pos_x > 275 && pos_x < 325 && pos_y>300 && pos_y < 375)
+				{
+					Mati = true;
+					state = PLAYING;
+				}
+			}
+
 			else if (state == BOARD)
 			{
 				if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
@@ -367,7 +391,7 @@ int main()
 		//mouse position develloper settings
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
-			if (state == MENU)
+			if (state == MENU || state == PLAYER_SELECTION || state == BOARD)
 			{
 				printf("%i , %i\n", pos_x, pos_y);
 			}
@@ -463,7 +487,21 @@ int main()
 		
 				
 			}
+			//*********************PLAYER SELECTION******************//
+			//******************************************************//
+			else if (state == PLAYER_SELECTION)
+			{
+				al_draw_text(title_font, al_map_rgb(255, 255, 255), screen_w / 2, 150, ALLEGRO_ALIGN_CENTER, "Choose player");
+				al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 0, 0), 10);
+				al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 0, 0), 10);
+				al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 0, 0), 10);
+				al_draw_rectangle(675, 300, 725, 375, al_map_rgb(255, 0, 0), 10);
+				al_draw_bitmap(player_Bocian, 75, 300, 0);
+				al_draw_bitmap(player_Dolny, 275, 300, 0);
 
+
+
+			}
 			//***********************BOARD**************************//
 			//******************************************************//
 
@@ -516,12 +554,22 @@ void InitPlayer(Student &player)
 }
 void DrawPlayer(Student &player)
 {
-	
-	ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("player_bitmap_1.png");
-	int image_w = al_get_bitmap_width(player_bitmap);
-	int image_h = al_get_bitmap_height(player_bitmap);
+	if (Bocian=true)
+	{
+		ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("Bocian.png");
+		int image_w = al_get_bitmap_width(player_bitmap);
+		int image_h = al_get_bitmap_height(player_bitmap);
+		al_draw_bitmap(player_bitmap, player.x - image_w / 2, player.y - image_h / 2, 0);
+	}
+	else if (!Bocian)
+	{
+		ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("Dolny.png");
+		int image_w = al_get_bitmap_width(player_bitmap);
+		int image_h = al_get_bitmap_height(player_bitmap);
+		al_draw_bitmap(player_bitmap, player.x - image_w / 2, player.y - image_h / 2, 0);
+	}
 
-	al_draw_bitmap(player_bitmap, player.x-image_w/2, player.y-image_h/2, 0);
+
 	//al_draw_filled_circle(player.x, player.y, 40, al_map_rgb(0, 255, 0));
 	
 }
