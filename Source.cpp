@@ -106,6 +106,7 @@ int main()
 	int map_h = al_get_bitmap_height(map);
 	ALLEGRO_BITMAP *player_Bocian = al_load_bitmap("Bocian.png");
 	ALLEGRO_BITMAP *player_Dolny = al_load_bitmap("Dolny.png");
+	ALLEGRO_BITMAP *player_Jakub = al_load_bitmap("Jakub.png");
 	
 	
 	ALLEGRO_FONT *font8bit = al_load_ttf_font("8-BIT WONDER.ttf", 25, 0);
@@ -366,13 +367,30 @@ int main()
 				}
 				else if (pos_x > 75 && pos_x < 125 && pos_y>300 && pos_y < 375)
 				{
-					Bocian = true;
-					state = PLAYING;
+					if (ev.mouse.button & 1)
+					{
+						Bocian = true;
+						state = PLAYING;
+					}
+					
 				}
 				else if (pos_x > 275 && pos_x < 325 && pos_y>300 && pos_y < 375)
 				{
-					Mati = true;
-					state = PLAYING;
+					if (ev.mouse.button & 1)
+					{
+						Mati = true;
+						state = PLAYING;
+					}
+					
+				}
+				else if (pos_x > 475 && pos_x < 525 && pos_y>300 && pos_y < 375)
+				{
+					if (ev.mouse.button & 1)
+					{
+						Jakub = true;
+						state = PLAYING;
+					}
+
 				}
 			}
 
@@ -492,15 +510,43 @@ int main()
 			else if (state == PLAYER_SELECTION)
 			{
 				al_draw_text(title_font, al_map_rgb(255, 255, 255), screen_w / 2, 150, ALLEGRO_ALIGN_CENTER, "Choose player");
-				al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 0, 0), 10);
-				al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 0, 0), 10);
-				al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 0, 0), 10);
+
+				
+				if (pos_x > 75 && pos_x < 125 && pos_y>300 && pos_y < 375)
+				{
+					al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 255, 255), 10);
+					al_draw_bitmap(player_Bocian, 75, 300, ALLEGRO_FLIP_VERTICAL);
+				}
+				else
+				{
+					al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 0, 0), 10);
+					al_draw_bitmap(player_Bocian, 75, 300, 0);
+				}
+
+				if (pos_x > 275 && pos_x < 325 && pos_y>300 && pos_y < 375)
+				{
+					al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 255, 255), 10);
+					al_draw_bitmap(player_Dolny, 275, 300, ALLEGRO_FLIP_VERTICAL);
+				}
+				else
+				{
+					al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 0, 0), 10);
+					al_draw_bitmap(player_Dolny, 275, 300, 0);
+				}
+
+				if (pos_x > 475 && pos_x < 525 && pos_y>300 && pos_y < 375)
+				{
+					al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 255, 255), 10);
+					al_draw_bitmap(player_Jakub, 475, 300, ALLEGRO_FLIP_VERTICAL);
+				}
+				else
+				{
+					al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 0, 0), 10);
+					al_draw_bitmap(player_Jakub, 475, 300, 0);
+				}
+
 				al_draw_rectangle(675, 300, 725, 375, al_map_rgb(255, 0, 0), 10);
-				al_draw_bitmap(player_Bocian, 75, 300, 0);
-				al_draw_bitmap(player_Dolny, 275, 300, 0);
-
-
-
+				
 			}
 			//***********************BOARD**************************//
 			//******************************************************//
@@ -554,16 +600,23 @@ void InitPlayer(Student &player)
 }
 void DrawPlayer(Student &player)
 {
-	if (Bocian=true)
+	if (Bocian)
 	{
 		ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("Bocian.png");
 		int image_w = al_get_bitmap_width(player_bitmap);
 		int image_h = al_get_bitmap_height(player_bitmap);
 		al_draw_bitmap(player_bitmap, player.x - image_w / 2, player.y - image_h / 2, 0);
 	}
-	else if (!Bocian)
+	else if (Mati)
 	{
 		ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("Dolny.png");
+		int image_w = al_get_bitmap_width(player_bitmap);
+		int image_h = al_get_bitmap_height(player_bitmap);
+		al_draw_bitmap(player_bitmap, player.x - image_w / 2, player.y - image_h / 2, 0);
+	}
+	else if (Jakub)
+	{
+		ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("Jakub.png");
 		int image_w = al_get_bitmap_width(player_bitmap);
 		int image_h = al_get_bitmap_height(player_bitmap);
 		al_draw_bitmap(player_bitmap, player.x - image_w / 2, player.y - image_h / 2, 0);
