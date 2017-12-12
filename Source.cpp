@@ -252,7 +252,15 @@ int main()
 			{
 				for (int i = 0; i < screen_h; i++)
 				{
-					if (player.x < 100)
+					if (player.x < 40)
+					{
+						player.x = j;
+					}
+					else if (player.x > 60 && player.y < 250)
+					{
+						player.x = j;
+					}
+					else if (player.x > 60 && player.y > 270)
 					{
 						player.x = j;
 					}
@@ -610,8 +618,8 @@ int main()
 //Player
 void InitPlayer(Student &player)
 {
-	player.x = screen_w / 2;
-	player.y = screen_h / 2;
+	player.x = 50;
+	player.y = 50;
 	player.ID = PLAYER;
 	player.score = 0;
 	player.speed = 3;
