@@ -5,6 +5,8 @@
 #include <allegro5\allegro_font.h>
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_image.h>
+#include <allegro5\allegro_audio.h>
+#include<allegro5\allegro_acodec.h>
 #include "object.h"
 
 
@@ -19,6 +21,8 @@ bool Jakub = false;
 bool Bojan = false;
 bool Mati = false;
 bool Bocian = false;
+
+
 
 //keyboard and keys
 enum KEYS{UP,DOWN,LEFT,RIGHT,E,ESC,SPACE};
@@ -82,10 +86,12 @@ int main()
 	al_init_font_addon();
 	al_init_ttf_addon();
 	al_init_image_addon();
+	al_init_acodec_addon();
 
 	//keyboard and/or mouse
 	al_install_keyboard();
 	al_install_mouse();
+	al_install_audio();
 
 	//objects
 	InitPlayer(player);
@@ -101,12 +107,21 @@ int main()
 	ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
 
 	ALLEGRO_BITMAP *menu_background = al_load_bitmap("background.png");
+	ALLEGRO_BITMAP * player_selection_background = al_load_bitmap("player_selection.png");
 	ALLEGRO_BITMAP *map = al_load_bitmap("map.png");
+
 	int map_w = al_get_bitmap_width(map);
 	int map_h = al_get_bitmap_height(map);
 	ALLEGRO_BITMAP *player_Bocian = al_load_bitmap("Bocian.png");
 	ALLEGRO_BITMAP *player_Dolny = al_load_bitmap("Dolny.png");
 	ALLEGRO_BITMAP *player_Jakub = al_load_bitmap("Jakub.png");
+
+	//audio
+	al_reserve_samples(10);
+	ALLEGRO_SAMPLE *song = al_load_sample("song.ogg");
+	ALLEGRO_SAMPLE_INSTANCE *songInstance = al_create_sample_instance(song);
+	al_set_sample_instance_playmode(songInstance, ALLEGRO_PLAYMODE_LOOP);
+	al_attach_sample_instance_to_mixer(songInstance, al_get_default_mixer());
 	
 	
 	ALLEGRO_FONT *font8bit = al_load_ttf_font("8-BIT WONDER.ttf", 25, 0);
@@ -212,6 +227,7 @@ int main()
 		else if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
 			redraw = true;
+			al_play_sample_instance(songInstance);
 
 			//player movement
 			if (keys[UP])
@@ -243,7 +259,7 @@ int main()
 				}
 			}
 			
-
+			/***********************************/
 
 
 			//collision_enemy detection
@@ -509,43 +525,50 @@ int main()
 			//******************************************************//
 			else if (state == PLAYER_SELECTION)
 			{
+				al_draw_bitmap(player_selection_background, 0, 0, 0);
 				al_draw_text(title_font, al_map_rgb(255, 255, 255), screen_w / 2, 150, ALLEGRO_ALIGN_CENTER, "Choose player");
 
 				
 				if (pos_x > 75 && pos_x < 125 && pos_y>300 && pos_y < 375)
 				{
-					al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 255, 255), 10);
+					al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 255, 255), 5);
 					al_draw_bitmap(player_Bocian, 75, 300, ALLEGRO_FLIP_VERTICAL);
+					al_draw_text(talk_font, al_map_rgb(255, 255, 255), 75, 400, 0, "BOCIAN");
 				}
 				else
 				{
-					al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 0, 0), 10);
+					al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 0, 0), 5);
 					al_draw_bitmap(player_Bocian, 75, 300, 0);
+					al_draw_text(talk_font, al_map_rgb(255, 0, 0), 75, 400, 0, "BOCIAN");
 				}
 
 				if (pos_x > 275 && pos_x < 325 && pos_y>300 && pos_y < 375)
 				{
-					al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 255, 255), 10);
+					al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 255, 255), 5);
 					al_draw_bitmap(player_Dolny, 275, 300, ALLEGRO_FLIP_VERTICAL);
+					al_draw_text(talk_font, al_map_rgb(255, 255, 255), 275, 400, 0, "DOLNY");
 				}
 				else
 				{
-					al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 0, 0), 10);
+					al_draw_rectangle(275, 300, 325, 375, al_map_rgb(255, 0, 0), 5);
 					al_draw_bitmap(player_Dolny, 275, 300, 0);
+					al_draw_text(talk_font, al_map_rgb(255, 0, 0), 275, 400, 0, "DOLNY");
 				}
 
 				if (pos_x > 475 && pos_x < 525 && pos_y>300 && pos_y < 375)
 				{
-					al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 255, 255), 10);
+					al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 255, 255), 5);
 					al_draw_bitmap(player_Jakub, 475, 300, ALLEGRO_FLIP_VERTICAL);
+					al_draw_text(talk_font, al_map_rgb(255, 255, 255), 475, 400, 0, "JAKUB");
 				}
 				else
 				{
-					al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 0, 0), 10);
+					al_draw_rectangle(475, 300, 525, 375, al_map_rgb(255, 0, 0), 5);
 					al_draw_bitmap(player_Jakub, 475, 300, 0);
+					al_draw_text(talk_font, al_map_rgb(255, 0, 0), 475, 400, 0, "JAKUB");
 				}
 
-				al_draw_rectangle(675, 300, 725, 375, al_map_rgb(255, 0, 0), 10);
+				al_draw_rectangle(675, 300, 725, 375, al_map_rgb(255, 0, 0), 5);
 				
 			}
 			//***********************BOARD**************************//
