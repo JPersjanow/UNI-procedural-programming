@@ -14,7 +14,7 @@
 const int screen_h = 600;
 const int screen_w = 800;
 const int FPS = 60;
-const int ENEMY_NUMBER = 5; 
+const int ENEMY_NUMBER = 5;
 
 //player choice variables
 bool Jakub = false;
@@ -25,14 +25,14 @@ bool Bocian = false;
 
 
 //keyboard and keys
-enum KEYS{UP,DOWN,LEFT,RIGHT,E,ESC,SPACE};
-bool keys[7] = { false,false,false,false,false,false,false};
+enum KEYS { UP, DOWN, LEFT, RIGHT, E, ESC, SPACE };
+bool keys[7] = { false,false,false,false,false,false,false };
 
-int pos_x = screen_w/2;
-int pos_y = screen_h/2;
+int pos_x = screen_w / 2;
+int pos_y = screen_h / 2;
 
 //states
-enum STATE{MENU,PLAYING,BOARD,PLAYER_SELECTION};
+enum STATE { MENU, PLAYING, BOARD, PLAYER_SELECTION };
 
 
 
@@ -53,7 +53,7 @@ int main()
 	//main variables
 	bool done = false;
 	bool redraw = false;
-	
+
 	//collision_enemy detection
 	bool bound = false;
 	bool collision_enemy = false;
@@ -63,7 +63,7 @@ int main()
 	Student player;
 	Sebix enemy[ENEMY_NUMBER];
 	Bottle item;
-	
+
 	//state variable
 	int state = MENU;
 
@@ -97,7 +97,7 @@ int main()
 	InitPlayer(player);
 	InitEnemy(enemy, ENEMY_NUMBER);
 	InitItem(item);
-	
+
 	//*****************Allegro variables****************//
 	//*************************************************//
 
@@ -122,8 +122,8 @@ int main()
 	ALLEGRO_SAMPLE_INSTANCE *songInstance = al_create_sample_instance(song);
 	al_set_sample_instance_playmode(songInstance, ALLEGRO_PLAYMODE_LOOP);
 	al_attach_sample_instance_to_mixer(songInstance, al_get_default_mixer());
-	
-	
+
+
 	ALLEGRO_FONT *font8bit = al_load_ttf_font("8-BIT WONDER.ttf", 25, 0);
 	ALLEGRO_FONT *title_font = al_load_ttf_font("8-BIT WONDER.ttf", 20, 0);
 	ALLEGRO_FONT *talk_font = al_load_font("8-BIT WONDER.ttf", 10, 0);
@@ -166,63 +166,63 @@ int main()
 		al_wait_for_event(event_queue, &ev);
 
 		if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
-	{
-		switch (ev.keyboard.keycode)
 		{
-		case ALLEGRO_KEY_ESCAPE:
-			keys[ESC] = true;
-			break;
-		case ALLEGRO_KEY_UP:
-			keys[UP] = true;
-			break;
-		case ALLEGRO_KEY_DOWN:
-			keys[DOWN] = true;
-			break;
-		case ALLEGRO_KEY_LEFT:
-			keys[LEFT] = true;
-			break;
-		case ALLEGRO_KEY_RIGHT:
-			keys[RIGHT] = true;
-			break;
-		case ALLEGRO_KEY_E:
-			keys[E] = true;
-			break;
-		case ALLEGRO_KEY_SPACE:
-			keys[SPACE] = true;
-			break;
+			switch (ev.keyboard.keycode)
+			{
+			case ALLEGRO_KEY_ESCAPE:
+				keys[ESC] = true;
+				break;
+			case ALLEGRO_KEY_UP:
+				keys[UP] = true;
+				break;
+			case ALLEGRO_KEY_DOWN:
+				keys[DOWN] = true;
+				break;
+			case ALLEGRO_KEY_LEFT:
+				keys[LEFT] = true;
+				break;
+			case ALLEGRO_KEY_RIGHT:
+				keys[RIGHT] = true;
+				break;
+			case ALLEGRO_KEY_E:
+				keys[E] = true;
+				break;
+			case ALLEGRO_KEY_SPACE:
+				keys[SPACE] = true;
+				break;
 
 
+			}
 		}
-	}
 
 		else if (ev.type == ALLEGRO_EVENT_KEY_UP)
-	{
-		switch (ev.keyboard.keycode)
 		{
-		case ALLEGRO_KEY_ESCAPE:
-			keys[ESC] = false;
-			break;
-		case ALLEGRO_KEY_UP:
-			keys[UP] = false;
-			break;
-		case ALLEGRO_KEY_DOWN:
-			keys[DOWN] = false;
-			break;
-		case ALLEGRO_KEY_LEFT:
-			keys[LEFT] = false;
-			break;
-		case ALLEGRO_KEY_RIGHT:
-			keys[RIGHT] = false;
-			break;
-		case ALLEGRO_KEY_E:
-			keys[E] = false;
-			break;
-		case ALLEGRO_KEY_SPACE:
-			keys[SPACE] = false;
-			break;
-		}
+			switch (ev.keyboard.keycode)
+			{
+			case ALLEGRO_KEY_ESCAPE:
+				keys[ESC] = false;
+				break;
+			case ALLEGRO_KEY_UP:
+				keys[UP] = false;
+				break;
+			case ALLEGRO_KEY_DOWN:
+				keys[DOWN] = false;
+				break;
+			case ALLEGRO_KEY_LEFT:
+				keys[LEFT] = false;
+				break;
+			case ALLEGRO_KEY_RIGHT:
+				keys[RIGHT] = false;
+				break;
+			case ALLEGRO_KEY_E:
+				keys[E] = false;
+				break;
+			case ALLEGRO_KEY_SPACE:
+				keys[SPACE] = false;
+				break;
+			}
 
-	}
+		}
 
 		else if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
@@ -243,11 +243,11 @@ int main()
 			{
 				printf("player x = %i\n player.y = %i\n", player.x, player.y);
 			}
-		
-			
+
+
 			/*************************************/
 			/***************MAP******************/
-			
+
 			for (int j = 0; j < screen_w; j++)
 			{
 				for (int i = 0; i < screen_h; i++)
@@ -266,7 +266,7 @@ int main()
 					}
 				}
 			}
-			
+
 			/***********************************/
 
 
@@ -317,7 +317,7 @@ int main()
 				collision_enemy = false;
 			}
 
-			
+
 			//collision item detection
 			if (player.x + player.boundx > item.x - item.boundx &&
 				player.x - player.boundx < item.x + item.boundx &&
@@ -346,20 +346,20 @@ int main()
 					{
 						al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy[i].x, enemy[i].y - 25, ALLEGRO_ALIGN_CENTER, "hello");
 					}
-					
+
 					printf("interation");
 				}
-			
+
 			}
 
 		}
-		
+
 		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
 			done = true;
 		}
-		
-		
+
+
 
 		//Mouse operations in menu and settings
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
@@ -396,7 +396,7 @@ int main()
 						Bocian = true;
 						state = PLAYING;
 					}
-					
+
 				}
 				else if (pos_x > 275 && pos_x < 325 && pos_y>300 && pos_y < 375)
 				{
@@ -405,7 +405,7 @@ int main()
 						Mati = true;
 						state = PLAYING;
 					}
-					
+
 				}
 				else if (pos_x > 475 && pos_x < 525 && pos_y>300 && pos_y < 375)
 				{
@@ -426,10 +426,10 @@ int main()
 						state = MENU;
 				}
 			}
-			
-		
+
+
 		}
-		
+
 		//mouse position develloper settings
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
@@ -437,12 +437,12 @@ int main()
 			{
 				printf("%i , %i\n", pos_x, pos_y);
 			}
-			
+
 			pos_x = ev.mouse.x;
 			pos_y = ev.mouse.y;
 		}
-		
-		
+
+
 
 
 		//*********************Rendering**********************//
@@ -450,9 +450,9 @@ int main()
 
 		if (redraw && al_event_queue_is_empty(event_queue)) //used to avoid flickering
 		{
-			
+
 			redraw = false;
-			
+
 			//*************************Game State************************//
 			//***********************************************************//
 			if (state == PLAYING)
@@ -463,20 +463,20 @@ int main()
 				DrawPlayer(player);
 				DrawItem(item);
 				//DrawEnemy(enemy, ENEMY_NUMBER);
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h -30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
+				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h - 30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), screen_w - 100, 35, ALLEGRO_ALIGN_CENTER, "score %i", player.score);
-				
+
 
 				//collision_enemy detection - developer
 				if (bound)
 				{
 					al_draw_filled_rectangle(player.x - player.boundx, player.y - player.boundy, player.x + player.boundx, player.y + player.boundy, al_map_rgba_f(.6, 0, .6, .6));
-					
+
 					for (int i = 0; i < ENEMY_NUMBER; i++)
 					{
 						al_draw_filled_rectangle(enemy[i].x - enemy[i].boundx, enemy[i].y - enemy[i].boundy, enemy[i].x + enemy[i].boundx, enemy[i].y + enemy[i].boundy, al_map_rgba_f(.6, 0, .6, .6));
 					}
-					
+
 					al_draw_filled_rectangle(item.x - item.boundx, item.y - item.boundy, item.x + item.boundx, item.y + item.boundy, al_map_rgba_f(.6, 0, .6, .6));
 
 				}
@@ -486,7 +486,7 @@ int main()
 					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, 30, ALLEGRO_ALIGN_CENTRE, "collision detected");
 				}
 
-		
+
 			}
 
 			//**************************MENU**********************//
@@ -496,7 +496,7 @@ int main()
 			{
 
 				al_draw_bitmap(menu_background, 0, 0, 0);
-				
+
 				//colour change of menu buttons beta version
 				if (pos_x > 289 && pos_x < 501 && pos_y > 424 && pos_y < 441)
 				{
@@ -506,7 +506,7 @@ int main()
 				{
 					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 120, ALLEGRO_ALIGN_CENTER, "New Game");
 				}
-	
+
 
 				if (pos_x > 302 && pos_x < 489 && pos_y > 454 && pos_y < 474)
 				{
@@ -516,18 +516,18 @@ int main()
 				{
 					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "LifeBoard");
 				}
-	
+
 				if (pos_x > 354 && pos_x < 436 && pos_y > 485 && pos_y < 505)
 				{
 					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 180, ALLEGRO_ALIGN_CENTER, "Exit");
 				}
-				else 
+				else
 				{
 					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 180, ALLEGRO_ALIGN_CENTER, "Exit");
 				}
-			
-		
-				
+
+
+
 			}
 			//*********************PLAYER SELECTION******************//
 			//******************************************************//
@@ -536,7 +536,7 @@ int main()
 				al_draw_bitmap(player_selection_background, 0, 0, 0);
 				al_draw_text(title_font, al_map_rgb(255, 255, 255), screen_w / 2, 150, ALLEGRO_ALIGN_CENTER, "Choose player");
 
-				
+
 				if (pos_x > 75 && pos_x < 125 && pos_y>300 && pos_y < 375)
 				{
 					al_draw_rectangle(75, 300, 125, 375, al_map_rgb(255, 255, 255), 5);
@@ -577,7 +577,7 @@ int main()
 				}
 
 				al_draw_rectangle(675, 300, 725, 375, al_map_rgb(255, 0, 0), 5);
-				
+
 			}
 			//***********************BOARD**************************//
 			//******************************************************//
@@ -593,12 +593,12 @@ int main()
 					al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "Back to Menu");
 				}
 			}
-			
-			
+
+
 			al_flip_display();
 			al_clear_to_color(al_map_rgb(0, 0, 0));
 		}
-		
+
 	}
 
 	al_destroy_display(display);
@@ -607,7 +607,7 @@ int main()
 	al_destroy_font(title_font);
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
-	
+
 }
 
 
@@ -625,8 +625,8 @@ void InitPlayer(Student &player)
 	player.speed = 3;
 	player.width = 50;
 	player.height = 75;
-	player.boundx = player.width/2;
-	player.boundy = player.height/2;
+	player.boundx = player.width / 2;
+	player.boundy = player.height / 2;
 
 }
 void DrawPlayer(Student &player)
@@ -655,7 +655,7 @@ void DrawPlayer(Student &player)
 
 
 	//al_draw_filled_circle(player.x, player.y, 40, al_map_rgb(0, 255, 0));
-	
+
 }
 //Player Movement
 void MovePlayerUp(Student &player)
@@ -714,14 +714,14 @@ void DrawEnemy(Sebix enemy[], int size)
 	enemy[1].x = screen_w / 2;
 	enemy[1].y = screen_h / 2;
 
-	enemy[2].x = screen_w / 2 +70;
+	enemy[2].x = screen_w / 2 + 70;
 	enemy[2].y = screen_h / 2;
 
-	enemy[3].x = screen_w / 2 -70;
+	enemy[3].x = screen_w / 2 - 70;
 	enemy[3].y = screen_h / 2;
 
 	enemy[4].x = screen_w / 2;
-	enemy[4].y = screen_h / 2 +70;
+	enemy[4].y = screen_h / 2 + 70;
 
 
 	al_draw_circle(enemy[1].x, enemy[1].y, 6, al_map_rgb(255, 0, 0), 10);
