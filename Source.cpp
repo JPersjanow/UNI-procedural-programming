@@ -15,6 +15,7 @@ const int screen_h = 600;
 const int screen_w = 800;
 const int FPS = 60;
 const int ENEMY_NUMBER = 5;
+const int ITEM_NUMBER = 4;
 
 //player choice variables
 bool Jakub = false;
@@ -45,8 +46,9 @@ void MovePlayerLeft(Student &player);
 void MovePlayerRight(Student &player);
 void InitEnemy(Sebix enemy[], int size);
 void DrawEnemy(Sebix enemy[], int size);
-void InitItem(Bottle &item);
-void DrawItem(Bottle &item);
+
+void InitItem(Bottle item[], int size);
+void DrawItem(Bottle item[], int size);
 
 int main()
 {
@@ -62,7 +64,7 @@ int main()
 	//game variables
 	Student player;
 	Sebix enemy[ENEMY_NUMBER];
-	Bottle item;
+	Bottle item[ITEM_NUMBER];
 
 	//state variable
 	int state = MENU;
@@ -96,7 +98,7 @@ int main()
 	//objects
 	InitPlayer(player);
 	InitEnemy(enemy, ENEMY_NUMBER);
-	InitItem(item);
+	InitItem(item, ITEM_NUMBER);
 
 	//*****************Allegro variables****************//
 	//*************************************************//
@@ -239,36 +241,33 @@ int main()
 			if (keys[LEFT])
 				MovePlayerLeft(player);
 			//developer
-			if (state == PLAYING)
+			/*if (state == PLAYING)
 			{
 				printf("player x = %i\n player.y = %i\n", player.x, player.y);
-			}
+			}*/
 
 
 			/*************************************/
 			/***************MAP******************/
 
-			for (int j = 0; j < screen_w; j++)
-			{
-				for (int i = 0; i < screen_h; i++)
-				{
 					if (player.x < 40)
 					{
-						player.x = j;
+						player.x = player.x;
 					}
-					else if (player.x > 60 && player.y < 250)
+					/*else if (player.x > 60 && player.y < 250)
 					{
 						player.x = j;
+						player.y = i;
 					}
 					else if (player.x > 60 && player.y > 270)
 					{
 						player.x = j;
-					}
-				}
-			}
+						player.y = i;
+					}*/
+			
 
 			/***********************************/
-
+					
 
 			//collision_enemy detection
 			if (keys[E])
@@ -319,12 +318,41 @@ int main()
 
 
 			//collision item detection
-			if (player.x + player.boundx > item.x - item.boundx &&
-				player.x - player.boundx < item.x + item.boundx &&
-				player.y + player.boundy > item.y - item.boundy &&
-				player.y - player.boundy < item.y + item.boundy)
+			if (player.x + player.boundx > item[1].x - item[1].boundx &&
+				player.x - player.boundx < item[1].x + item[1].boundx &&
+				player.y + player.boundy > item[1].y - item[1].boundy &&
+				player.y - player.boundy < item[1].y + item[1].boundy)
 			{
 				collision_item = true;
+				//develloper
+				printf("colission item 1\n");
+			}
+			else if (player.x + player.boundx > item[2].x - item[2].boundx &&
+				player.x - player.boundx < item[2].x + item[2].boundx &&
+				player.y + player.boundy > item[2].y - item[2].boundy &&
+				player.y - player.boundy < item[2].y + item[2].boundy)
+			{
+				collision_item = true;
+				//develloper
+				printf("colission item 2\n");
+			}
+			else if (player.x + player.boundx > item[3].x - item[3].boundx &&
+				player.x - player.boundx < item[3].x + item[3].boundx &&
+				player.y + player.boundy > item[3].y - item[3].boundy &&
+				player.y - player.boundy < item[3].y + item[3].boundy)
+			{
+				collision_item = true;
+				//develloper
+				printf("colission item 3\n");
+			}
+			else if (player.x + player.boundx > item[4].x - item[4].boundx &&
+				player.x - player.boundx < item[4].x + item[4].boundx &&
+				player.y + player.boundy > item[4].y - item[4].boundy &&
+				player.y - player.boundy < item[4].y + item[4].boundy)
+			{
+				collision_item = true;
+				//develloper
+				printf("colission item 4\n");
 			}
 			else
 			{
@@ -342,6 +370,7 @@ int main()
 				else if (keys[E] && collision_enemy)
 				{
 					player.score = player.score - 1;
+					enemy[1].live = false;
 					for (int i = 1; i < ENEMY_NUMBER; i++)
 					{
 						al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy[i].x, enemy[i].y - 25, ALLEGRO_ALIGN_CENTER, "hello");
@@ -433,7 +462,7 @@ int main()
 		//mouse position develloper settings
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
-			if (state == MENU || state == PLAYER_SELECTION || state == BOARD)
+			if (state == MENU || state == PLAYER_SELECTION || state == BOARD || state==PLAYING)
 			{
 				printf("%i , %i\n", pos_x, pos_y);
 			}
@@ -461,8 +490,8 @@ int main()
 				al_draw_bitmap(map, screen_w - map_w, screen_h - map_h, 0);
 
 				DrawPlayer(player);
-				DrawItem(item);
-				//DrawEnemy(enemy, ENEMY_NUMBER);
+				DrawItem(item,ITEM_NUMBER);
+				DrawEnemy(enemy, ENEMY_NUMBER);
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h - 30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), screen_w - 100, 35, ALLEGRO_ALIGN_CENTER, "score %i", player.score);
 
@@ -477,7 +506,11 @@ int main()
 						al_draw_filled_rectangle(enemy[i].x - enemy[i].boundx, enemy[i].y - enemy[i].boundy, enemy[i].x + enemy[i].boundx, enemy[i].y + enemy[i].boundy, al_map_rgba_f(.6, 0, .6, .6));
 					}
 
-					al_draw_filled_rectangle(item.x - item.boundx, item.y - item.boundy, item.x + item.boundx, item.y + item.boundy, al_map_rgba_f(.6, 0, .6, .6));
+					for (int i = 0; i < ITEM_NUMBER; i++)
+					{
+						al_draw_filled_rectangle(item[i].x - item[i].boundx, item[i].y - item[i].boundy, item[i].x + item[i].boundx, item[i].y + item[i].boundy, al_map_rgba_f(.6, 0, .6, .6));
+					}
+					
 
 				}
 
@@ -711,45 +744,66 @@ void InitEnemy(Sebix enemy[], int size)
 void DrawEnemy(Sebix enemy[], int size)
 {
 
-	enemy[1].x = screen_w / 2;
-	enemy[1].y = screen_h / 2;
+	enemy[1].x = 48;
+	enemy[1].y = 253;
 
-	enemy[2].x = screen_w / 2 + 70;
-	enemy[2].y = screen_h / 2;
+	enemy[2].x = 238;
+	enemy[2].y = 381;
 
-	enemy[3].x = screen_w / 2 - 70;
-	enemy[3].y = screen_h / 2;
+	enemy[3].x = 441;
+	enemy[3].y = 573;
 
-	enemy[4].x = screen_w / 2;
-	enemy[4].y = screen_h / 2 + 70;
+	enemy[4].x = 529;
+	enemy[4].y = 61;
 
-
-	al_draw_circle(enemy[1].x, enemy[1].y, 6, al_map_rgb(255, 0, 0), 10);
-	al_draw_circle(enemy[2].x, enemy[2].y, 6, al_map_rgb(255, 0, 0), 10);
-	al_draw_circle(enemy[3].x, enemy[3].y, 6, al_map_rgb(255, 0, 0), 10);
-	al_draw_circle(enemy[4].x, enemy[4].y, 6, al_map_rgb(255, 0, 0), 10);
+	if (enemy[1].live)
+	{
+		al_draw_circle(enemy[1].x, enemy[1].y, 6, al_map_rgb(255, 0, 0), 10);
+		al_draw_circle(enemy[2].x, enemy[2].y, 6, al_map_rgb(255, 0, 0), 10);
+		al_draw_circle(enemy[3].x, enemy[3].y, 6, al_map_rgb(255, 0, 0), 10);
+		al_draw_circle(enemy[4].x, enemy[4].y, 6, al_map_rgb(255, 0, 0), 10);
+	}
+	
 
 }
 
 
 //Item
-void InitItem(Bottle &item)
+void InitItem(Bottle item[], int size)
 {
-	item.ID = OBJECT;
-	item.x = screen_w / 2 + 80;
-	item.y = screen_h / 2 + 80;
-	item.width = 10;
-	item.height = 10;
-	item.boundx = item.width;
-	item.boundy = item.height;
+	for (int i = 1; i < size; i++)
+	{
+		item[i].ID = OBJECT;
+		item[i].width = 10;
+		item[i].height = 10;
+		item[i].boundx = item[i].width;
+		item[i].boundy = item[i].height;
+	}
+	
 }
-void DrawItem(Bottle &item)
+void DrawItem(Bottle item[],int size)
 {
+	item[1].x = 62;
+	item[1].y = 125;
+
+	item[2].x = 301;
+	item[2].y = 62;
+
+	item[3].x = 710;
+	item[3].y = 248;
+
+	item[4].x = 710;
+	item[4].y = 379;
+
 	ALLEGRO_BITMAP *bottle_bitmap = al_load_bitmap("bottle.png");
 	int image_w = al_get_bitmap_width(bottle_bitmap);
 	int image_h = al_get_bitmap_height(bottle_bitmap);
 
-	al_draw_bitmap(bottle_bitmap, item.x - image_w / 2, item.y - image_h / 2, 0);
+	for (int i = 0; i < size; i++)
+	{
+		al_draw_bitmap(bottle_bitmap, item[i].x - image_w / 2, item[i].y - image_h / 2, 0);
+	}
+	
 
 
 	//al_draw_filled_circle(item.x, item.y, 10, al_map_rgb(0, 255, 255));
