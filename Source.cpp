@@ -44,8 +44,6 @@ void MovePlayerUp(Student &player);
 void MovePlayerDown(Student &player);
 void MovePlayerLeft(Student &player);
 void MovePlayerRight(Student &player);
-void InitEnemy(Sebix enemy[], int size);
-void DrawEnemy(Sebix enemy[], int size);
 
 void InitItem(Bottle item[], int size);
 void DrawItem(Bottle item[], int size);
@@ -58,8 +56,14 @@ int main()
 
 	//collision_enemy detection
 	bool bound = false;
-	bool collision_enemy = false;
-	bool collision_item = false;
+	bool collision_enemy1 = false;
+	bool collision_enemy2 = false;
+	bool collision_enemy3 = false;
+	bool collision_enemy4 = false;
+	bool collision_item1 = false;
+	bool collision_item2 = false;
+	bool collision_item3 = false;
+	bool collision_item4 = false;
 
 	//game variables
 	Student player;
@@ -97,8 +101,12 @@ int main()
 
 	//objects
 	InitPlayer(player);
-	InitEnemy(enemy, ENEMY_NUMBER);
+
 	InitItem(item, ITEM_NUMBER);
+	float enemy_x = 10;
+	float enemy_y = screen_h / 2;
+	float enemy_speed = 3;
+
 
 	//*****************Allegro variables****************//
 	//*************************************************//
@@ -117,6 +125,7 @@ int main()
 	ALLEGRO_BITMAP *player_Bocian = al_load_bitmap("Bocian.png");
 	ALLEGRO_BITMAP *player_Dolny = al_load_bitmap("Dolny.png");
 	ALLEGRO_BITMAP *player_Jakub = al_load_bitmap("Jakub.png");
+	
 
 	//audio
 	al_reserve_samples(10);
@@ -246,6 +255,12 @@ int main()
 				printf("player x = %i\n player.y = %i\n", player.x, player.y);
 			}*/
 
+			//enemy movemenet
+			if (enemy_x>355 || enemy_x<0)
+			{
+				enemy_speed = -enemy_speed;
+			}
+			enemy_x += enemy_speed;
 
 			/*************************************/
 			/***************MAP******************/
@@ -274,89 +289,128 @@ int main()
 				bound = true;
 			else
 				bound = false;
+			
+			
+				if (keys[E] && player.x == enemy_x)
+				{
 
-			if (player.x + player.boundx > enemy[1].x - enemy[1].boundx &&
-				player.x - player.boundx < enemy[1].x + enemy[1].boundx &&
-				player.y + player.boundy > enemy[1].y - enemy[1].boundy &&
-				player.y - player.boundy < enemy[1].y + enemy[1].boundy)
+					player.score++;
+					//develloper
+					printf("colission enemy \n");
+				}
+
+			if (enemy[1].live)
 			{
-				collision_enemy = true;
-				//develloper
-				printf("colission enemy 1\n");
+					if (keys[E] && player.x + player.boundx > enemy[1].x - enemy[1].boundx &&
+					player.x - player.boundx < enemy[1].x + enemy[1].boundx &&
+					player.y + player.boundy > enemy[1].y - enemy[1].boundy &&
+					player.y - player.boundy < enemy[1].y + enemy[1].boundy)
+				{
+					collision_enemy1 = true;
+					enemy[1].live = false;
+					player.score++;
+					//develloper
+					printf("colission enemy 1\n");
+				}
 			}
-			else if (player.x + player.boundx > enemy[2].x - enemy[2].boundx &&
-				player.x - player.boundx < enemy[2].x + enemy[2].boundx &&
-				player.y + player.boundy > enemy[2].y - enemy[2].boundy &&
-				player.y - player.boundy < enemy[2].y + enemy[2].boundy)
+			if (enemy[2].live)
 			{
-				collision_enemy = true;
-				//develloper
-				printf("colission enemy 2\n");
+					if (keys[E] && player.x + player.boundx > enemy[2].x - enemy[2].boundx &&
+					player.x - player.boundx < enemy[2].x + enemy[2].boundx &&
+					player.y + player.boundy > enemy[2].y - enemy[2].boundy &&
+					player.y - player.boundy < enemy[2].y + enemy[2].boundy)
+				{
+					collision_enemy2 = true;
+					enemy[2].live = false;
+					player.score++;
+					//develloper
+					printf("colission enemy 2\n");
+				}
 			}
-			else if (player.x + player.boundx > enemy[3].x - enemy[3].boundx &&
-				player.x - player.boundx < enemy[3].x + enemy[3].boundx &&
-				player.y + player.boundy > enemy[3].y - enemy[3].boundy &&
-				player.y - player.boundy < enemy[3].y + enemy[3].boundy)
+			if (enemy[3].live)
 			{
-				collision_enemy = true;
-				//develloper
-				printf("colission enemy 3\n");
+				if (keys[E] &&  player.x + player.boundx > enemy[3].x - enemy[3].boundx &&
+					player.x - player.boundx < enemy[3].x + enemy[3].boundx &&
+					player.y + player.boundy > enemy[3].y - enemy[3].boundy &&
+					player.y - player.boundy < enemy[3].y + enemy[3].boundy)
+				{
+					collision_enemy3 = true;
+					enemy[3].live = false;
+					player.score++;
+					//develloper
+					printf("colission enemy 3\n");
+				}
 			}
-			else if (player.x + player.boundx > enemy[4].x - enemy[4].boundx &&
-				player.x - player.boundx < enemy[4].x + enemy[4].boundx &&
-				player.y + player.boundy > enemy[4].y - enemy[4].boundy &&
-				player.y - player.boundy < enemy[4].y + enemy[4].boundy)
-			{
-				collision_enemy = true;
-				//develloper
-				printf("colission enemy 4\n");
+			if (enemy[4].live)
+			{	
+					if (keys[E] && player.x + player.boundx > enemy[4].x - enemy[4].boundx &&
+					player.x - player.boundx < enemy[4].x + enemy[4].boundx &&
+					player.y + player.boundy > enemy[4].y - enemy[4].boundy &&
+					player.y - player.boundy < enemy[4].y + enemy[4].boundy)
+				{
+					collision_enemy4 = true;
+					enemy[4].live = false;
+					player.score++;
+					//develloper
+					printf("colission enemy 4\n");
+				}
+
 			}
+			
 			else
 			{
-				collision_enemy = false;
+				collision_enemy1 = false;
+				collision_enemy2 = false;
+				collision_enemy3 = false;
+				collision_enemy4 = false;
 			}
 
 
 			//collision item detection
-			if (player.x + player.boundx > item[1].x - item[1].boundx &&
+			if (keys[E] && player.x + player.boundx > item[1].x - item[1].boundx &&
 				player.x - player.boundx < item[1].x + item[1].boundx &&
 				player.y + player.boundy > item[1].y - item[1].boundy &&
 				player.y - player.boundy < item[1].y + item[1].boundy)
 			{
-				collision_item = true;
+				collision_item1 = true;
+				item[1].live = false;
+				player.score++;
 				//develloper
 				printf("colission item 1\n");
 			}
-			else if (player.x + player.boundx > item[2].x - item[2].boundx &&
+			if (keys[E] && player.x + player.boundx > item[2].x - item[2].boundx &&
 				player.x - player.boundx < item[2].x + item[2].boundx &&
 				player.y + player.boundy > item[2].y - item[2].boundy &&
 				player.y - player.boundy < item[2].y + item[2].boundy)
 			{
-				collision_item = true;
+				collision_item2 = true;
 				//develloper
 				printf("colission item 2\n");
 			}
-			else if (player.x + player.boundx > item[3].x - item[3].boundx &&
+			if (keys[E] && player.x + player.boundx > item[3].x - item[3].boundx &&
 				player.x - player.boundx < item[3].x + item[3].boundx &&
 				player.y + player.boundy > item[3].y - item[3].boundy &&
 				player.y - player.boundy < item[3].y + item[3].boundy)
 			{
-				collision_item = true;
+				collision_item3 = true;
 				//develloper
 				printf("colission item 3\n");
 			}
-			else if (player.x + player.boundx > item[4].x - item[4].boundx &&
+			if (keys[E] && player.x + player.boundx > item[4].x - item[4].boundx &&
 				player.x - player.boundx < item[4].x + item[4].boundx &&
 				player.y + player.boundy > item[4].y - item[4].boundy &&
 				player.y - player.boundy < item[4].y + item[4].boundy)
 			{
-				collision_item = true;
+				collision_item4 = true;
 				//develloper
 				printf("colission item 4\n");
 			}
 			else
 			{
-				collision_item = false;
+				collision_item1 = false;
+				collision_item2 = false;
+				collision_item3 = false;
+				collision_item4 = false;
 			}
 
 
@@ -367,18 +421,6 @@ int main()
 				{
 					state = BOARD;
 				}
-				else if (keys[E] && collision_enemy)
-				{
-					player.score = player.score - 1;
-					enemy[1].live = false;
-					for (int i = 1; i < ENEMY_NUMBER; i++)
-					{
-						al_draw_text(talk_font, al_map_rgb(255, 255, 255), enemy[i].x, enemy[i].y - 25, ALLEGRO_ALIGN_CENTER, "hello");
-					}
-
-					printf("interation");
-				}
-
 			}
 
 		}
@@ -491,7 +533,8 @@ int main()
 
 				DrawPlayer(player);
 				DrawItem(item,ITEM_NUMBER);
-				DrawEnemy(enemy, ENEMY_NUMBER);
+				al_draw_circle(enemy_x, enemy_y, 6, al_map_rgb(255, 0, 0), 10);
+				//DrawEnemy(enemy, ENEMY_NUMBER);
 				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h - 30, ALLEGRO_ALIGN_CENTER, "press esc to settings");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), screen_w - 100, 35, ALLEGRO_ALIGN_CENTER, "score %i", player.score);
 
@@ -513,12 +556,6 @@ int main()
 					
 
 				}
-
-				if (collision_enemy || collision_item)
-				{
-					al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, 30, ALLEGRO_ALIGN_CENTRE, "collision detected");
-				}
-
 
 			}
 
@@ -727,46 +764,6 @@ void MovePlayerRight(Student &player)
 	}
 }
 
-//Enemy
-void InitEnemy(Sebix enemy[], int size)
-{
-	for (int i = 1; i < size; i++)
-	{
-		enemy[i].ID = ENEMY;
-		enemy[i].live = true;
-		enemy[i].width = 30;
-		enemy[i].height = 30;
-		enemy[i].boundx = enemy[i].width;
-		enemy[i].boundy = enemy[i].height;
-	}
-
-}
-void DrawEnemy(Sebix enemy[], int size)
-{
-
-	enemy[1].x = 48;
-	enemy[1].y = 253;
-
-	enemy[2].x = 238;
-	enemy[2].y = 381;
-
-	enemy[3].x = 441;
-	enemy[3].y = 573;
-
-	enemy[4].x = 529;
-	enemy[4].y = 61;
-
-	if (enemy[1].live)
-	{
-		al_draw_circle(enemy[1].x, enemy[1].y, 6, al_map_rgb(255, 0, 0), 10);
-		al_draw_circle(enemy[2].x, enemy[2].y, 6, al_map_rgb(255, 0, 0), 10);
-		al_draw_circle(enemy[3].x, enemy[3].y, 6, al_map_rgb(255, 0, 0), 10);
-		al_draw_circle(enemy[4].x, enemy[4].y, 6, al_map_rgb(255, 0, 0), 10);
-	}
-	
-
-}
-
 
 //Item
 void InitItem(Bottle item[], int size)
@@ -774,6 +771,7 @@ void InitItem(Bottle item[], int size)
 	for (int i = 1; i < size; i++)
 	{
 		item[i].ID = OBJECT;
+		item[i].live = true;
 		item[i].width = 10;
 		item[i].height = 10;
 		item[i].boundx = item[i].width;

@@ -16,41 +16,16 @@ struct Student
 	int boundy;
 
 };
-struct Sebix
+
+struct Bottle
 {
 	int ID;
 	int x;
 	int y;
-	int speed;
 	int live;
 
 	int width;
 	int height;
 	int boundx;
 	int boundy;
-
-};
-struct Bottle
-{
-	int ID;
-	int x;
-	int y;
-	int speed;
-
-	int width;
-	int height;
-	int boundx;
-	int boundy;
-};
-
-struct Mouse
-{
-	int ID;
-	int x;
-	int y;
-	int width;
-	int height;
-	int boundx;
-	int boundy;
-
 };
