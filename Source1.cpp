@@ -36,31 +36,24 @@ int player_boundy = player_height / 2;
 int player_score = 0;
 
 /*enemy variables*/
+int enemy_width = 25;
+int enemy_height = 35;
+int enemy_boundx = enemy_width;
+int enemy_boundy = enemy_height;
+
 int enemy1_x = 50;
 int enemy1_y = 250;
 int enemy1_speed = 3;
-int enemy1_width = 25;
-int enemy1_height = 35;
-int enemy1_boundx = enemy1_width;
-int enemy1_boundy = enemy1_height;
 bool enemy1_collision = false;
 
 int enemy2_x = 190;
 int enemy2_y = 380;
 int enemy2_speed = 2;
-int enemy2_width = 25;
-int enemy2_height = 35;
-int enemy2_boundx = enemy2_width;
-int enemy2_boundy = enemy2_height;
 bool enemy2_collision = false;
 
 int enemy3_x = 50;
 int enemy3_y = 580;
 int enemy3_speed = 2;
-int enemy3_width = 25;
-int enemy3_height = 35;
-int enemy3_boundx = enemy3_width;
-int enemy3_boundy = enemy3_height;
 bool enemy3_collision = false;
 
 /*item variables*/
@@ -76,7 +69,6 @@ int item1_y = 190;
 int item2_x = 300;
 int item2_y = 60;
 bool item2_collision = false;
-bool message1 = false;
 
 int item3_x = 50;
 int item3_y = 350;
@@ -90,6 +82,8 @@ int item5_x = 290;
 int item5_y = 480;
 bool item5_collision = false;
 
+/*messages*/
+bool message1 = false;
 
 int main()
 {
@@ -306,6 +300,19 @@ int main()
 					player_x = player_x;
 				}*/
 
+				/*area affecting player*/
+				if (player_x > 20 && player_x < 80 && player_y>280 && player_y < 320)
+				{
+					player_x = 50;
+					player_y = 250;
+				}
+				if (player_x > 685 && player_x < 745 && player_y < 30 && player_y>0)
+				{
+					player_x = 710;
+					player_y = 60;
+				}
+
+
 				/*enemy movement*/
 				if (enemy1_x > 710 || enemy1_x < 50)
 				{
@@ -326,24 +333,24 @@ int main()
 				enemy3_x += enemy3_speed;
 
 				/*enemy collision*/
-				if (player_x + player_boundx > enemy1_x - enemy1_boundx &&
-					player_x - player_boundx < enemy1_x + enemy1_boundx &&
-					player_y + player_boundy > enemy1_y - enemy1_boundy &&
-					player_y - player_boundy < enemy1_y + enemy1_boundy)
+				if (player_x + player_boundx > enemy1_x - enemy_boundx &&
+					player_x - player_boundx < enemy1_x + enemy_boundx &&
+					player_y + player_boundy > enemy1_y - enemy_boundy &&
+					player_y - player_boundy < enemy1_y + enemy_boundy)
 				{
 					printf("collision\n");
 				}
-				if (player_x + player_boundx > enemy2_x - enemy2_boundx &&
-					player_x - player_boundx < enemy2_x + enemy2_boundx &&
-					player_y + player_boundy > enemy2_y - enemy2_boundy &&
-					player_y - player_boundy < enemy2_y + enemy2_boundy)
+				if (player_x + player_boundx > enemy2_x - enemy_boundx &&
+					player_x - player_boundx < enemy2_x + enemy_boundx &&
+					player_y + player_boundy > enemy2_y - enemy_boundy &&
+					player_y - player_boundy < enemy2_y + enemy_boundy)
 				{
 					printf("collision\n");
 				}
-				if (player_x + player_boundx > enemy3_x - enemy3_boundx &&
-					player_x - player_boundx < enemy3_x + enemy3_boundx &&
-					player_y + player_boundy > enemy3_y - enemy3_boundy &&
-					player_y - player_boundy < enemy3_y + enemy3_boundy)
+				if (player_x + player_boundx > enemy3_x - enemy_boundx &&
+					player_x - player_boundx < enemy3_x + enemy_boundx &&
+					player_y + player_boundy > enemy3_y - enemy_boundy &&
+					player_y - player_boundy < enemy3_y + enemy_boundy)
 				{
 					printf("collision\n");
 				}
@@ -581,6 +588,9 @@ int main()
 	al_destroy_font(font8bit);
 	al_destroy_font(talk_font);
 	al_destroy_font(title_font);
+	al_destroy_bitmap(bottle_bitmap);
+	al_destroy_bitmap(enemy_bitmap);
+	al_destroy_bitmap(player_bitmap);
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
 }
