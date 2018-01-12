@@ -36,8 +36,8 @@ int player_boundy = player_height / 2;
 int player_score = 0;
 
 /*enemy variables*/
-int enemy_width = 25;
-int enemy_height = 35;
+int enemy_width = 50;
+int enemy_height = 75;
 int enemy_boundx = enemy_width;
 int enemy_boundy = enemy_height;
 
@@ -82,8 +82,13 @@ int item5_x = 290;
 int item5_y = 480;
 bool item5_collision = false;
 
+int bottle_score = 20;
+
 /*messages*/
 bool message1 = false;
+bool message2 = false;
+bool message3 = false;
+
 
 int main()
 {
@@ -338,13 +343,20 @@ int main()
 					player_y + player_boundy > enemy1_y - enemy_boundy &&
 					player_y - player_boundy < enemy1_y + enemy_boundy)
 				{
+					message2 = true;
+					player_score = player_score - 1;
 					printf("collision\n");
+				}
+				else
+				{
+					message2 = false;
 				}
 				if (player_x + player_boundx > enemy2_x - enemy_boundx &&
 					player_x - player_boundx < enemy2_x + enemy_boundx &&
 					player_y + player_boundy > enemy2_y - enemy_boundy &&
 					player_y - player_boundy < enemy2_y + enemy_boundy)
 				{
+					player_score = player_score - 1;
 					printf("collision\n");
 				}
 				if (player_x + player_boundx > enemy3_x - enemy_boundx &&
@@ -352,8 +364,10 @@ int main()
 					player_y + player_boundy > enemy3_y - enemy_boundy &&
 					player_y - player_boundy < enemy3_y + enemy_boundy)
 				{
+					player_score = player_score - 1;
 					printf("collision\n");
 				}
+				
 
 				/*item collision*/
 				if (!item1_collision)
@@ -373,7 +387,7 @@ int main()
 					{
 						item1_collision = true;
 						message1 = false;
-						player_score++;
+						player_score = player_score + bottle_score;
 						printf("item1 collision\n");
 					}
 				}
@@ -386,7 +400,7 @@ int main()
 						player_y - player_boundy < item2_y + item_boundy)
 					{
 						item2_collision = true;
-						player_score++;
+						player_score = player_score + bottle_score;
 						printf("item2 collision\n");
 					}
 				}
@@ -399,7 +413,7 @@ int main()
 						player_y - player_boundy < item3_y + item_boundy)
 					{
 						item3_collision = true;
-						player_score++;
+						player_score = player_score + bottle_score;
 						printf("item3 collision\n");
 					}
 				}
@@ -412,7 +426,7 @@ int main()
 						player_y - player_boundy < item4_y + item_boundy)
 					{
 						item4_collision = true;
-						player_score++;
+						player_score = player_score + bottle_score;
 						printf("item4 collision\n");
 					}
 				}
@@ -425,7 +439,7 @@ int main()
 						player_y - player_boundy < item5_y + item_boundy)
 					{
 						item5_collision = true;
-						player_score++;
+						player_score = player_score + bottle_score;
 						printf("item5 collision\n");
 					}
 				}
@@ -525,6 +539,7 @@ int main()
 		else if (state == PLAYING)
 		{
 			al_draw_bitmap(map, screen_w - map_w, screen_h - map_h, 0);
+			al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 0, 30, 0, "SCORE %i", player_score);
 			al_draw_bitmap(player_bitmap, player_x - image_w / 2, player_y - image_h / 2, 0);
 			al_draw_bitmap(enemy_bitmap, enemy1_x - image_enemy_w / 2, enemy1_y - image_enemy_h / 2, 0);
 			al_draw_bitmap(enemy_bitmap, enemy2_x - image_enemy_w / 2, enemy2_y - image_enemy_h / 2, 0);
@@ -537,6 +552,13 @@ int main()
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "bottles give you points");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 100, ALLEGRO_ALIGN_CENTER, "collect them all");
 				
+			}
+			if (message2)
+			{
+				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 30, ALLEGRO_ALIGN_CENTER, "look out an enemy");
+				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 65, ALLEGRO_ALIGN_CENTER, "enemies take your score");
+				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "if your score gets down to -1");
+				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 100, ALLEGRO_ALIGN_CENTER, "YOU DIE");
 			}
 
 			if (!item1_collision)
