@@ -29,19 +29,19 @@ int pos_y = screen_h / 2;
 int player_x = 50;
 int player_y = 50;
 int player_speed = 3;
-int player_height = 75;
-int player_width = 50;
+int player_height = 60;
+int player_width = 40;
 int player_boundx = player_width / 2;
 int player_boundy = player_height / 2;
 int player_score = 0;
 
 /*enemy variables*/
-int enemy_width = 50;
-int enemy_height = 75;
-int enemy_boundx = enemy_width;
-int enemy_boundy = enemy_height;
+int enemy_width = 40;
+int enemy_height = 60;
+int enemy_boundx = enemy_width/2;
+int enemy_boundy = enemy_height/2;
 
-int enemy1_x = 50;
+int enemy1_x = 120;
 int enemy1_y = 250;
 int enemy1_speed = 3;
 bool enemy1_collision = false;
@@ -127,7 +127,7 @@ int main()
 	ALLEGRO_FONT *talk_font = al_load_font("8-BIT WONDER.ttf", 10, 0);
 
 	/*bitmaps*/
-	ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("Jakub.png");
+	ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("player.png");
 	int image_w = al_get_bitmap_width(player_bitmap);
 	int image_h = al_get_bitmap_height(player_bitmap);
 	ALLEGRO_BITMAP *bottle_bitmap = al_load_bitmap("bottle.png");
@@ -319,7 +319,7 @@ int main()
 
 
 				/*enemy movement*/
-				if (enemy1_x > 710 || enemy1_x < 50)
+				if (enemy1_x > 710 || enemy1_x < 120)
 				{
 					enemy1_speed = -enemy1_speed;
 				}
@@ -379,6 +379,10 @@ int main()
 					{
 						message1 = true;
 						printf("item1 collision\n");
+					}	
+					else
+					{
+						message1 = false;
 					}
 					if (keys[E] && player_x + player_boundx > item1_x - item_boundx &&
 						player_x - player_boundx < item1_x + item_boundx &&
@@ -390,6 +394,7 @@ int main()
 						player_score = player_score + bottle_score;
 						printf("item1 collision\n");
 					}
+				
 				}
 
 				if (!item2_collision)
@@ -539,14 +544,14 @@ int main()
 		else if (state == PLAYING)
 		{
 			al_draw_bitmap(map, screen_w - map_w, screen_h - map_h, 0);
-			al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 0, 30, 0, "SCORE %i", player_score);
+			al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 5, 30, 0, "SCORE %i", player_score);
 			al_draw_bitmap(player_bitmap, player_x - image_w / 2, player_y - image_h / 2, 0);
 			al_draw_bitmap(enemy_bitmap, enemy1_x - image_enemy_w / 2, enemy1_y - image_enemy_h / 2, 0);
 			al_draw_bitmap(enemy_bitmap, enemy2_x - image_enemy_w / 2, enemy2_y - image_enemy_h / 2, 0);
 			al_draw_bitmap(enemy_bitmap, enemy3_x - image_enemy_w / 2, enemy3_y - image_enemy_h / 2, 0);
 			if (message1)
 			{
-				al_draw_bitmap(popup, 590, 0, 0);
+				//al_draw_bitmap(popup, 590, 0, 0);
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 30, ALLEGRO_ALIGN_CENTER, "this is a bottle");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 65, ALLEGRO_ALIGN_CENTER, "press e to pick up");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "bottles give you points");
@@ -557,7 +562,7 @@ int main()
 			{
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 30, ALLEGRO_ALIGN_CENTER, "look out an enemy");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 65, ALLEGRO_ALIGN_CENTER, "enemies take your score");
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "if your score gets down to -1");
+				//al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 100, ALLEGRO_ALIGN_CENTER, "YOU DIE");
 			}
 
