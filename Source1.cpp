@@ -6,7 +6,6 @@
 #include <allegro5\allegro_image.h>
 #include <allegro5\allegro_audio.h>
 #include<allegro5\allegro_acodec.h>
-#include "object.h"
 
 /*screen constants*/
 const int screen_h = 600;
@@ -291,6 +290,12 @@ int main()
 				{
 					state = BOARD;
 				}
+
+				/*endgame*/
+				if (player_score < -20)
+				{
+					state = BOARD;
+				}
 				/*player movement on the map*/
 				/*if (player_x <20)
 				{
@@ -563,7 +568,7 @@ int main()
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 30, ALLEGRO_ALIGN_CENTER, "look out an enemy");
 				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 65, ALLEGRO_ALIGN_CENTER, "enemies take your score");
 				//al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "");
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 100, ALLEGRO_ALIGN_CENTER, "YOU DIE");
+				//al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 100, ALLEGRO_ALIGN_CENTER, "YOU DIE");
 			}
 
 			if (!item1_collision)
@@ -602,7 +607,7 @@ int main()
 			}
 			else
 			{
-				al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "Back to Menu");
+				al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "END GAME");
 			}
 		}
 		
