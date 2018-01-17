@@ -17,7 +17,7 @@ enum KEYS { UP, DOWN, LEFT, RIGHT, E, ESC, SPACE };
 bool keys[7] = { false,false,false,false,false,false,false };
 
 /*state enumeration*/
-enum STATE { MENU, PLAYING, BOARD, OPTIONS };
+enum STATE { MENU, PLAYING, ENDGAME, OPTIONS, ENDSCREEN };
 
 
 /*mouse variables*/
@@ -40,20 +40,40 @@ int enemy_height = 60;
 int enemy_boundx = enemy_width/2;
 int enemy_boundy = enemy_height/2;
 
-int enemy1_x = 120;
-int enemy1_y = 250;
+int enemy1_x = 100;
+int enemy1_y = 230;
 int enemy1_speed = 3;
 bool enemy1_collision = false;
 
-int enemy2_x = 190;
-int enemy2_y = 380;
+int enemy2_x = 430;
+int enemy2_y = 410;
 int enemy2_speed = 2;
 bool enemy2_collision = false;
 
-int enemy3_x = 50;
-int enemy3_y = 580;
+int enemy3_x = 90;
+int enemy3_y = 550;
 int enemy3_speed = 2;
 bool enemy3_collision = false;
+
+/*NPC variable*/
+int npc_width = 40;
+int npc_height = 60;
+int npc_boundx = npc_width / 2;
+int npc_boundy = npc_height / 2;
+
+int npc1_x = 80;
+int npc1_y = 80;
+bool npc1_collision = false;
+
+int npc2_x = 140;
+int npc2_y = 330;
+bool npc2_collision = false;
+
+int npc3_x = 440;
+int npc3_y = 50;
+bool npc3_collision = false;
+
+int npc_score = 20;
 
 /*item variables*/
 int item_width = 10;
@@ -63,18 +83,18 @@ int item_boundy = item_height;
 bool item1_collision = false;
 
 int item1_x = 50;
-int item1_y = 190;
+int item1_y = 230;
 
-int item2_x = 300;
-int item2_y = 60;
+int item2_x = 360;
+int item2_y = 50;
 bool item2_collision = false;
 
-int item3_x = 50;
+int item3_x = 750;
 int item3_y = 350;
 bool item3_collision = false;
 
-int item4_x = 710;
-int item4_y = 380;
+int item4_x = 50;
+int item4_y = 360;
 bool item4_collision = false;
 
 int item5_x = 290;
@@ -84,9 +104,9 @@ bool item5_collision = false;
 int bottle_score = 20;
 
 /*messages*/
-bool message1 = false;
-bool message2 = false;
-bool message3 = false;
+bool message_npc1 = false;
+bool message_npc2 = false;
+bool message_npc3 = false;
 
 
 int main()
@@ -121,9 +141,9 @@ int main()
 	ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
 
 	/*fonts*/
-	ALLEGRO_FONT *font8bit = al_load_ttf_font("8-BIT WONDER.ttf", 25, 0);
-	ALLEGRO_FONT *title_font = al_load_ttf_font("8-BIT WONDER.ttf", 20, 0);
-	ALLEGRO_FONT *talk_font = al_load_font("8-BIT WONDER.ttf", 10, 0);
+	ALLEGRO_FONT *font8bit = al_load_ttf_font("Benguiat Bold.ttf", 25, 0);
+	ALLEGRO_FONT *title_font = al_load_ttf_font("Benguiat Bold.ttf", 20, 0);
+	ALLEGRO_FONT *talk_font = al_load_font("Benguiat Bold.ttf", 10, 0);
 
 	/*bitmaps*/
 	ALLEGRO_BITMAP *player_bitmap = al_load_bitmap("player.png");
@@ -135,11 +155,20 @@ int main()
 	ALLEGRO_BITMAP *enemy_bitmap = al_load_bitmap("enemy.png");
 	int image_enemy_w = al_get_bitmap_width(enemy_bitmap);
 	int image_enemy_h = al_get_bitmap_height(enemy_bitmap);
+	ALLEGRO_BITMAP *npc1_bitmap = al_load_bitmap("npc1.png");
+	int image_npc_w = al_get_bitmap_width(npc1_bitmap);
+	int image_npc_h = al_get_bitmap_height(npc1_bitmap);
+	ALLEGRO_BITMAP *npc2_bitmap = al_load_bitmap("npc2.png");
+	ALLEGRO_BITMAP *npc3_bitmap = al_load_bitmap("npc3.png");
 	ALLEGRO_BITMAP *map = al_load_bitmap("map.png");
 	int map_w = al_get_bitmap_width(map);
 	int map_h = al_get_bitmap_height(map);
 	ALLEGRO_BITMAP *menu_background = al_load_bitmap("background.png");
-	ALLEGRO_BITMAP *popup = al_load_bitmap("popup.png");
+	ALLEGRO_BITMAP *message_npc1_bitmap = al_load_bitmap("message npc1.png");
+	ALLEGRO_BITMAP *message_npc2_bitmap = al_load_bitmap("message npc2.png");
+	ALLEGRO_BITMAP *message_npc3_bitmap = al_load_bitmap("message npc3.png");
+	int image_npc_message_w = al_get_bitmap_width(message_npc1_bitmap);
+	int image_npc_message_h = al_get_bitmap_height(message_npc1_bitmap);
 
 	/*audio*/
 	al_reserve_samples(10);
@@ -258,9 +287,36 @@ int main()
 			/*player movement*/
 			if (keys[UP])
 			{
-
-
-				player_y -= player_speed;
+				if ((player_x >= 80 && player_x <= 720) && (player_y <= 200 && player_y >= 190))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 330 && player_x <= 720) && (player_y <= 20 && player_y >= 10))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 430 && player_x <= 720) && (player_y <= 380 && player_y >= 370))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 80 && player_x <= 370) && (player_y <= 265 && player_y >= 270))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 80 && player_x <= 370) && (player_y <= 515 && player_y >= 520))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 430 && player_x <= 800) && (player_y <= 520 && player_y >= 510))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 720 && player_x <= 780) && (player_y <= 320 && player_y >= 310))
+				{
+					player_y -= 0;
+				}
+				else
+					player_y -= player_speed;
 				if (player_y < 0)
 				{
 					player_y = 0;
@@ -268,6 +324,31 @@ int main()
 			}
 			if (keys[DOWN])
 			{
+				if ((player_x >= 330 && player_x <= 720) && (player_y >= 80  && player_y <= 90))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 80 && player_x <= 370) && (player_y >= 260 && player_y <= 265))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 430 && player_x <= 780) && (player_y >= 260 && player_y <= 265))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 430 && player_x <= 780) && (player_y >= 440 && player_y <= 450))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 80 && player_x <= 370) && (player_y >= 520 && player_y <= 525))
+				{
+					player_y -= 0;
+				}
+				else if ((player_x >= 20 && player_x <= 800) && (player_y >= 580 && player_y <= 590))
+				{
+					player_y -= 0;
+				}
+				else
 				player_y += player_speed;
 				if (player_y > screen_h)
 				{
@@ -277,7 +358,35 @@ int main()
 			}
 			if (keys[LEFT])
 			{
-				if (player_x > 20)
+				if ((player_x >= 10 && player_x <= 20) && (player_y >= 0 && player_y <= 580))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 320 && player_x <= 330) && (player_y >= 20 && player_y <= 80))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 710 && player_x <= 720) && (player_y >= 80 && player_y <= 200))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 365 && player_x <= 370) && (player_y >= 260 && player_y <= 380))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 365 && player_x <= 370) && (player_y >= 440 && player_y <= 520))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 85 && player_x <= 90) && (player_y >= 260 && player_y <= 520))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 710 && player_x <= 720) && (player_y >= 320 && player_y <= 380))
+				{
+					player_x -= 0;
+				}
+				else
 				{
 					player_x -= player_speed;
 				}
@@ -290,8 +399,41 @@ int main()
 			}
 			if (keys[RIGHT])
 			{
-				
+				if ((player_x >= 80 && player_x <= 90) && (player_y >= 0 && player_y <= 200))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 80 && player_x <= 85) && (player_y >= 260 && player_y <= 520))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 360 && player_x <= 365) && (player_y >= 260 && player_y <= 380))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 430 && player_x <= 440) && (player_y >= 260 && player_y <= 380))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 780 && player_x <= 790) && (player_y >= 0 && player_y <= 260))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 780 && player_x <= 790) && (player_y >= 320 && player_y <= 440))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 430 && player_x <= 440) && (player_y >= 440 && player_y <= 520))
+				{
+					player_x -= 0;
+				}
+				else if ((player_x >= 360 && player_x <= 365) && (player_y >= 440 && player_y <= 520))
+				{
+					player_x -= 0;
+				}
+				else
 					player_x += player_speed;
+				
 			
 				
 				if (player_x > screen_w)
@@ -306,14 +448,14 @@ int main()
 			{
 				if (keys[ESC])
 				{
-					state = BOARD;
+					state = ENDGAME;
 				}
 
 				/*endgame*/
 				if (player_score < -20)
 				{
 
-					state = BOARD;
+					state = ENDGAME;
 					/*restart*/
 					player_score = 0;
 					player_x = 50;
@@ -325,19 +467,14 @@ int main()
 					item4_collision = false;
 					item5_collision = false;
 				}
-				/*player movement on the map*/
-				/*if (player_x <20)
+
+				/*if(po³o¿enie gracza==obszar koñcowy)
 				{
-					player_x = 20;
-				}
-				if (player_x > 80)
-				{
-					player_x = 80;
-				}
-				if (player_y > 215 && player_y < 280)
-				{
-					player_x = player_x;
+					state = ENDSCREEN;
 				}*/
+
+
+			
 
 				/*area affecting player*/
 				if (player_x > 20 && player_x < 80 && player_y>280 && player_y < 320)
@@ -353,19 +490,19 @@ int main()
 
 
 				/*enemy movement*/
-				if (enemy1_x > 710 || enemy1_x < 120)
+				if (enemy1_x > 700 || enemy1_x < 100)
 				{
 					enemy1_speed = -enemy1_speed;
 				}
 				enemy1_x += enemy1_speed;
 
-				if (enemy2_x > 700 || enemy2_x < 190)
+				if (enemy2_x > 700 || enemy2_x < 430)
 				{
 					enemy2_speed = -enemy2_speed;
 				}
 				enemy2_x += enemy2_speed;
 
-				if (enemy3_x > 575 || enemy3_x < 50)
+				if (enemy3_x > 660 || enemy3_x < 90)
 				{
 					enemy3_speed = -enemy3_speed;
 				}
@@ -377,13 +514,8 @@ int main()
 					player_y + player_boundy > enemy1_y - enemy_boundy &&
 					player_y - player_boundy < enemy1_y + enemy_boundy)
 				{
-					message2 = true;
 					player_score = player_score - 1;
 					printf("collision\n");
-				}
-				else
-				{
-					message2 = false;
 				}
 				if (player_x + player_boundx > enemy2_x - enemy_boundx &&
 					player_x - player_boundx < enemy2_x + enemy_boundx &&
@@ -403,28 +535,63 @@ int main()
 				}
 				
 
+				/*npc collision*/
+				if (!message_npc1 && keys[E] && player_x + player_boundx > npc1_x - npc_boundx &&
+					player_x - player_boundx < npc1_x + npc_boundx &&
+					player_y + player_boundy > npc1_y - npc_boundy &&
+					player_y - player_boundy < npc1_y + npc_boundy)
+				{
+					message_npc1 = true;
+					printf("npc 1 collision\n");
+				}
+				else if (message_npc1 && keys[E] && player_x + player_boundx > npc1_x - npc_boundx &&
+					player_x - player_boundx < npc1_x + npc_boundx &&
+					player_y + player_boundy > npc1_y - npc_boundy &&
+					player_y - player_boundy < npc1_y + npc_boundy)
+				{
+					message_npc1 = false;
+				}
+				if (!message_npc2 && keys[E] && player_x + player_boundx > npc2_x - npc_boundx &&
+					player_x - player_boundx < npc2_x + npc_boundx &&
+					player_y + player_boundy > npc2_y - npc_boundy &&
+					player_y - player_boundy < npc2_y + npc_boundy)
+				{
+					message_npc2 = true;
+					printf("npc 2 collision\n");
+				}
+				else if (message_npc2 && keys[E] && player_x + player_boundx > npc2_x - npc_boundx &&
+					player_x - player_boundx < npc2_x + npc_boundx &&
+					player_y + player_boundy > npc2_y - npc_boundy &&
+					player_y - player_boundy < npc2_y + npc_boundy)
+				{
+					message_npc2 = false;
+				}
+				if (!message_npc3 && keys[E] && player_x + player_boundx > npc3_x - npc_boundx &&
+					player_x - player_boundx < npc3_x + npc_boundx &&
+					player_y + player_boundy > npc3_y - npc_boundy &&
+					player_y - player_boundy < npc3_y + npc_boundy)
+				{
+					message_npc3 = true;
+					printf("npc 3 collision\n");
+				}
+				else if (message_npc3 && keys[E] && player_x + player_boundx > npc3_x - npc_boundx &&
+					player_x - player_boundx < npc3_x + npc_boundx &&
+					player_y + player_boundy > npc3_y - npc_boundy &&
+					player_y - player_boundy < npc3_y + npc_boundy)
+				{
+					message_npc3 = false;
+				}
+				
+
 				/*item collision*/
 				if (!item1_collision)
 				{
-					if (player_x + player_boundx > item1_x - item_boundx &&
-						player_x - player_boundx < item1_x + item_boundx &&
-						player_y + player_boundy > item1_y - item_boundy &&
-						player_y - player_boundy < item1_y + item_boundy)
-					{
-						message1 = true;
-						printf("item1 collision\n");
-					}	
-					else
-					{
-						message1 = false;
-					}
 					if (keys[E] && player_x + player_boundx > item1_x - item_boundx &&
 						player_x - player_boundx < item1_x + item_boundx &&
 						player_y + player_boundy > item1_y - item_boundy &&
 						player_y - player_boundy < item1_y + item_boundy)
 					{
 						item1_collision = true;
-						message1 = false;
 						player_score = player_score + bottle_score;
 						printf("item1 collision\n");
 					}
@@ -523,13 +690,17 @@ int main()
 				}
 
 			}
-			else if (state == BOARD)
+			else if (state == ENDGAME)
 			{
 				if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
 				{
 					if (ev.mouse.button & 1)
 						state = MENU;
 				}
+			}
+			else if (state == ENDSCREEN)
+			{
+
 			}
 			else if (state == OPTIONS)
 			{
@@ -594,23 +765,10 @@ int main()
 			al_draw_bitmap(enemy_bitmap, enemy1_x - image_enemy_w / 2, enemy1_y - image_enemy_h / 2, 0);
 			al_draw_bitmap(enemy_bitmap, enemy2_x - image_enemy_w / 2, enemy2_y - image_enemy_h / 2, 0);
 			al_draw_bitmap(enemy_bitmap, enemy3_x - image_enemy_w / 2, enemy3_y - image_enemy_h / 2, 0);
-			if (message1)
-			{
-				//al_draw_bitmap(popup, 590, 0, 0);
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 30, ALLEGRO_ALIGN_CENTER, "this is a bottle");
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 65, ALLEGRO_ALIGN_CENTER, "press e to pick up");
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "bottles give you points");
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 100, ALLEGRO_ALIGN_CENTER, "collect them all");
-				
-			}
-			if (message2)
-			{
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 30, ALLEGRO_ALIGN_CENTER, "look out an enemy");
-				al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 65, ALLEGRO_ALIGN_CENTER, "enemies take your score");
-				//al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 85, ALLEGRO_ALIGN_CENTER, "");
-				//al_draw_textf(talk_font, al_map_rgb(255, 255, 255), 700, 100, ALLEGRO_ALIGN_CENTER, "YOU DIE");
-			}
-
+			al_draw_bitmap(npc1_bitmap, npc1_x - image_npc_w / 2, npc1_y - image_npc_h / 2, 0);
+			al_draw_bitmap(npc2_bitmap, npc2_x - image_npc_w / 2, npc2_y - image_npc_h / 2, 0);
+			al_draw_bitmap(npc3_bitmap, npc3_x - image_npc_w / 2, npc3_y - image_npc_h / 2, 0);
+		
 			if (!item1_collision)
 			{
 				al_draw_bitmap(bottle_bitmap, item1_x - image_bottle_w / 2, item1_y - image_bottle_h / 2, 0);
@@ -636,6 +794,18 @@ int main()
 				al_draw_bitmap(bottle_bitmap, item5_x - image_bottle_w / 2, item5_y - image_bottle_h / 2, 0);
 			}
 
+			if (message_npc1)
+			{
+				al_draw_bitmap(message_npc1_bitmap, screen_w - image_npc_message_w, screen_h - image_npc_message_h, 0);
+			}
+			if (message_npc2)
+			{
+				al_draw_bitmap(message_npc2_bitmap, screen_w - image_npc_message_w, screen_h - image_npc_message_h, 0);
+			}
+			if (message_npc3)
+			{
+				al_draw_bitmap(message_npc3_bitmap, screen_w - image_npc_message_w, screen_h - image_npc_message_h, 0);
+			}
 
 		}
 			/*OPTIONS MENU*/
@@ -651,8 +821,8 @@ int main()
 				al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "MUSIC ON");
 			}
 		}
-			/*BOARD*/
-		else if (state == BOARD)
+			/*ENDGAME*/
+		else if (state == ENDGAME)
 		{
 			if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
 			{
