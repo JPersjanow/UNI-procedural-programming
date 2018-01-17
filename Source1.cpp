@@ -17,7 +17,7 @@ enum KEYS { UP, DOWN, LEFT, RIGHT, E, ESC, SPACE };
 bool keys[7] = { false,false,false,false,false,false,false };
 
 /*state enumeration*/
-enum STATE { MENU, PLAYING, BOARD, PLAYER_SELECTION };
+enum STATE { MENU, PLAYING, BOARD, OPTIONS };
 
 
 /*mouse variables*/
@@ -169,6 +169,14 @@ int main()
 	{
 		printf("Font Error");
 	}
+	if (!songInstance)
+	{
+		printf("failed to initialize songInstance\n");
+	}
+	if (!song)
+	{
+		printf("failed to initialize song\n");
+	}
 
 	/*event sources*/
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -245,10 +253,13 @@ int main()
 		{
 			redraw = true;
 			al_play_sample_instance(songInstance);
+			
 
 			/*player movement*/
 			if (keys[UP])
 			{
+
+
 				player_y -= player_speed;
 				if (player_y < 0)
 				{
@@ -266,7 +277,11 @@ int main()
 			}
 			if (keys[LEFT])
 			{
-				player_x -= player_speed;
+				if (player_x > 20)
+				{
+					player_x -= player_speed;
+				}
+				
 				if (player_x < 0)
 				{
 					player_x = 0;
@@ -275,7 +290,10 @@ int main()
 			}
 			if (keys[RIGHT])
 			{
-				player_x += player_speed;
+				
+					player_x += player_speed;
+			
+				
 				if (player_x > screen_w)
 				{
 					player_x = screen_w;
@@ -294,7 +312,18 @@ int main()
 				/*endgame*/
 				if (player_score < -20)
 				{
+
 					state = BOARD;
+					/*restart*/
+					player_score = 0;
+					player_x = 50;
+					player_y = 50;
+
+					item1_collision = false;
+					item2_collision = false;
+					item3_collision = false;
+					item4_collision = false;
+					item5_collision = false;
 				}
 				/*player movement on the map*/
 				/*if (player_x <20)
@@ -485,7 +514,7 @@ int main()
 				if (pos_x>302 && pos_x <489 && pos_y > 454 && pos_y < 474)
 				{
 					if (ev.mouse.button & 1)
-						state = BOARD;
+						state = OPTIONS;
 				}
 				if (pos_x>354 && pos_x <436 && pos_y > 485 && pos_y < 505)
 				{
@@ -500,6 +529,17 @@ int main()
 				{
 					if (ev.mouse.button & 1)
 						state = MENU;
+				}
+			}
+			else if (state == OPTIONS)
+			{
+				if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322)
+				{
+					if (ev.mouse.button & 1)
+					{
+						state = MENU;
+					}
+						
 				}
 			}
 		}
@@ -526,11 +566,11 @@ int main()
 
 			if (pos_x > 302 && pos_x < 489 && pos_y > 454 && pos_y < 474)
 			{
-				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "LifeBoard");
+				al_draw_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "About");
 			}
 			else
 			{
-				al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "LifeBoard");
+				al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2 + 150, ALLEGRO_ALIGN_CENTER, "About");
 			}
 
 			if (pos_x > 354 && pos_x < 436 && pos_y > 485 && pos_y < 505)
@@ -597,6 +637,19 @@ int main()
 			}
 
 
+		}
+			/*OPTIONS MENU*/
+		else if (state == OPTIONS)
+		{
+			if (pos_x > 354 && pos_x < 432 && pos_y > 304 && pos_y < 322 )
+			{
+				al_draw_multiline_text(font8bit, al_map_rgb(255, 255, 255), screen_w / 2, screen_h / 2, 760,10, ALLEGRO_ALIGN_CENTER, "JOP");
+
+			}
+			else
+			{
+				al_draw_text(font8bit, al_map_rgb(255, 0, 0), screen_w / 2, screen_h / 2, ALLEGRO_ALIGN_CENTER, "MUSIC ON");
+			}
 		}
 			/*BOARD*/
 		else if (state == BOARD)
